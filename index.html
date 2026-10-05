@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team Series III · Fellowship of the Force</title>
+<meta name="description" content="Fellowship Team Series – kompetitive Star Wars Unlimited Teamturnier-Serie im 3v3-Format in Dresden.">
+<script>document.documentElement.classList.add('js')</script>
+<link rel="icon" type="image/png" href="https://static.wixstatic.com/media/8cb7fb_94af4e85d1234156a6f231723941851f~mv2.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Oswald:wght@300;400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* ============ Tokens ============ */
+:root{
+  --bg:#07080b;
+  --bg-2:#0e1016;
+  --surface:#13161e;
+  --ink:#ece8e1;          /* warmes Off-White statt #fff */
+  --ink-2:#a9a59d;
+  --ink-3:#6b6862;
+  --line:#262a33;
+  --accent:#6fb6ff;       /* Hyperraum-Blau aus der Originalseite */
+  --accent-2:#2e6fd6;
+  --red:#e0523f;          /* Team B */
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-io:cubic-bezier(.65,0,.35,1);
+  --gutter:clamp(16px,4vw,56px);
+  --serif:"Cinzel",serif;
+  --cond:"Oswald",sans-serif;
+  --sans:"Inter",system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:300 16px/1.65 var(--sans);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+::selection{background:var(--accent);color:var(--bg)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+@media (hover:hover) and (pointer:fine){ body.has-cursor, body.has-cursor a, body.has-cursor button, body.has-cursor summary{cursor:none} }
+
+/* ============ Typo ============ */
+.eyebrow{font:400 12px/1 var(--cond);letter-spacing:.28em;text-transform:uppercase;color:var(--ink-2)}
+.h2{font:500 clamp(34px,6vw,76px)/1 var(--serif);letter-spacing:.06em;text-transform:uppercase;margin:18px 0 0}
+.h3{font:500 18px/1.2 var(--cond);letter-spacing:.18em;text-transform:uppercase;margin:0 0 14px}
+.lead{max-width:60ch;color:var(--ink-2);font-size:clamp(16px,1.4vw,19px);margin:22px 0 0}
+.muted{color:var(--ink-3)}
+small{color:var(--ink-3);font-size:13px;display:inline-block;margin-top:4px;line-height:1.45}
+
+/* ============ Cursor ============ */
+.cursor{position:fixed;inset:0;pointer-events:none;z-index:90;display:none}
+body.has-cursor .cursor{display:block}
+.cursor__dot,.cursor__ring{position:fixed;left:0;top:0;border-radius:50%;will-change:transform}
+.cursor__dot{width:6px;height:6px;margin:-3px 0 0 -3px;background:var(--ink);mix-blend-mode:difference}
+.cursor__ring{width:38px;height:38px;margin:-19px 0 0 -19px;border:1px solid rgba(236,232,225,.45);display:grid;place-items:center;
+  transition:width .45s var(--ease),height .45s var(--ease),margin .45s var(--ease),background-color .35s,border-color .35s}
+.cursor__label{font:500 9px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--bg);opacity:0;transition:opacity .25s}
+body.cursor-hover .cursor__ring{width:64px;height:64px;margin:-32px 0 0 -32px;background:rgba(236,232,225,.08);border-color:var(--ink)}
+body.cursor-label .cursor__ring{width:84px;height:84px;margin:-42px 0 0 -42px;background:var(--ink);border-color:var(--ink)}
+body.cursor-label .cursor__label{opacity:1}
+body.cursor-down .cursor__ring{transform:scale(.8)}
+.cursor__trail{position:fixed;left:0;top:0;width:3px;height:3px;border-radius:50%;background:var(--accent);pointer-events:none;z-index:89}
+
+/* ============ Nav ============ */
+.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;gap:32px;padding:18px var(--gutter);transition:background .5s,backdrop-filter .5s,transform .6s var(--ease)}
+.nav.is-scrolled{background:rgba(7,8,11,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px dashed var(--line)}
+.nav.is-hidden{transform:translateY(-100%)}
+.nav__brand{display:flex;align-items:center;gap:10px;font:500 14px var(--serif);letter-spacing:.2em}
+.nav__links{display:flex;gap:28px;margin-left:auto}
+.nav__links a{font:400 12px var(--cond);letter-spacing:.22em;text-transform:uppercase;color:var(--ink-2);position:relative;padding:4px 0;transition:color .3s}
+.nav__links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform:scaleX(0);transform-origin:right;transition:transform .5s var(--ease)}
+.nav__links a:hover,.nav__links a.is-active{color:var(--ink)}
+.nav__links a:hover::after,.nav__links a.is-active::after{transform:scaleX(1);transform-origin:left}
+.nav__burger{display:none;margin-left:auto;width:40px;height:40px;position:relative}
+.nav__burger span{position:absolute;left:10px;right:10px;height:1px;background:var(--ink);transition:transform .4s var(--ease)}
+.nav__burger span:first-child{top:16px}.nav__burger span:last-child{top:23px}
+body.menu-open .nav__burger span:first-child{transform:translateY(3.5px) rotate(45deg)}
+body.menu-open .nav__burger span:last-child{transform:translateY(-3.5px) rotate(-45deg)}
+.mobile-menu{position:fixed;inset:0;z-index:45;background:var(--bg);display:flex;flex-direction:column;justify-content:center;padding:0 var(--gutter);gap:8px;clip-path:inset(0 0 100% 0);transition:clip-path .8s var(--ease-io)}
+.mobile-menu a{font:500 clamp(32px,9vw,54px)/1.15 var(--serif);letter-spacing:.06em;text-transform:uppercase}
+body.menu-open .mobile-menu{clip-path:inset(0 0 0 0)}
+
+/* ============ Buttons ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font:500 12px/1 var(--cond);letter-spacing:.24em;text-transform:uppercase;border-radius:999px;transition:background .4s var(--ease),color .4s var(--ease),border-color .4s,transform .5s var(--ease)}
+.btn--solid{background:var(--ink);color:var(--bg);padding:18px 30px}
+.btn--solid:hover{background:var(--accent)}
+.btn--ghost{border:1px solid rgba(236,232,225,.35);padding:11px 20px}
+.btn--ghost:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.btn--text{padding:18px 4px;color:var(--ink-2)}
+.btn--text:hover{color:var(--ink)}
+
+/* ============ Hero ============ */
+.hero{position:relative;min-height:100svh;display:grid;place-items:center;overflow:hidden;padding:120px var(--gutter) 90px}
+.hero__stars{position:absolute;inset:0;width:100%;height:100%}
+.hero__vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 45%,transparent 0,rgba(7,8,11,.35) 45%,var(--bg) 88%);pointer-events:none}
+.hero__inner{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero__logo{width:clamp(260px,36vw,460px);height:auto;filter:drop-shadow(0 0 40px rgba(111,182,255,.18))}
+.hero__title{font:400 clamp(26px,4.6vw,56px)/1 var(--serif);letter-spacing:.42em;margin:34px 0 0;padding-left:.42em;text-transform:uppercase}
+.hero__sub{font:300 12px var(--cond);letter-spacing:.3em;text-transform:uppercase;color:var(--ink-2);margin:22px 0 0}
+.hero__actions{display:flex;gap:18px;align-items:center;margin-top:44px;flex-wrap:wrap;justify-content:center}
+.hero__card{position:absolute;left:var(--gutter);bottom:32px;display:flex;flex-direction:column;gap:6px;padding:18px 22px;border:1px solid var(--line);border-radius:12px;background:rgba(14,16,22,.82)}
+.hero__card strong{font:500 22px var(--serif);letter-spacing:.08em}
+.hero__card span:last-child{font-size:13px;color:var(--ink-2)}
+.hero__side{position:absolute;right:var(--gutter);top:50%;transform:translateY(-50%) rotate(180deg);writing-mode:vertical-rl;font:400 11px var(--cond);letter-spacing:.35em;text-transform:uppercase;color:var(--ink-3)}
+
+/* ============ Sections ============ */
+.section{position:relative;padding:clamp(90px,14vw,180px) var(--gutter);border-top:1px dashed var(--line)}
+.section--tight{padding-block:clamp(80px,10vw,140px)}
+.section__head{margin-bottom:clamp(48px,6vw,80px)}
+
+/* Facts */
+.facts{display:grid;grid-template-columns:repeat(3,1fr);margin:0;border-top:1px solid var(--line)}
+.fact{padding:28px 28px 32px 0;border-bottom:1px solid var(--line)}
+.fact:not(:nth-child(3n)){border-right:1px solid var(--line)}
+.fact:not(:nth-child(3n+1)){padding-left:28px}
+.fact dt{font:400 11px var(--cond);letter-spacing:.26em;text-transform:uppercase;color:var(--ink-3);margin-bottom:12px}
+.fact dd{margin:0;font:400 clamp(18px,1.7vw,22px)/1.35 var(--sans);color:var(--ink)}
+
+.split-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,7vw,120px);margin-top:clamp(70px,9vw,120px)}
+.split-grid p{color:var(--ink-2);max-width:56ch}
+.flow{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.flow li{display:grid;grid-template-columns:56px 1fr;gap:10px;padding:24px 0;border-top:1px dashed var(--line)}
+.flow li:last-child{border-bottom:1px dashed var(--line)}
+.flow__n{font:400 34px/1 var(--serif);color:var(--accent)}
+.flow h4{font:500 15px var(--cond);letter-spacing:.2em;text-transform:uppercase;margin:4px 0 6px}
+.flow p{margin:0;font-size:15px}
+
+.schedule{margin-top:clamp(70px,9vw,120px);padding:clamp(24px,3vw,44px);border:1px solid var(--line);border-radius:12px;background:var(--bg-2)}
+.schedule__head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:10px}
+.schedule__list{list-style:none;margin:0;padding:0;columns:2;column-gap:clamp(30px,5vw,80px)}
+.schedule__list li{break-inside:avoid;display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px dashed var(--line);transition:padding .5s var(--ease),color .3s}
+.schedule__list li:hover{padding-left:10px;color:var(--accent)}
+.schedule__list time{font:400 14px var(--cond);letter-spacing:.1em;color:var(--ink-2);white-space:nowrap}
+.schedule__list .is-break{color:var(--ink-3)}
+.schedule__list .is-top span::before{content:"✦ ";color:var(--accent)}
+
+/* Prizes */
+.prizes{display:grid;grid-template-columns:1.4fr repeat(4,1fr);gap:14px}
+.prize{position:relative;padding:26px 22px 28px;border:1px solid var(--line);border-radius:12px;background:var(--bg-2);overflow:hidden;min-height:220px;display:flex;flex-direction:column;justify-content:space-between;transition:border-color .5s,transform .7s var(--ease)}
+.prize::before{content:"";position:absolute;inset:0;background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(111,182,255,.14),transparent 45%);opacity:0;transition:opacity .4s}
+.prize:hover{border-color:#3a4252;transform:translateY(-6px)}
+.prize:hover::before{opacity:1}
+.prize__place{font:400 clamp(40px,4.4vw,64px)/1 var(--serif);color:var(--ink);position:relative}
+.prize ul{list-style:none;margin:0;padding:0;position:relative;font-size:14px;color:var(--ink-2)}
+.prize li+li{margin-top:4px}
+.prize--first{background:linear-gradient(160deg,#152238,var(--bg-2) 60%);border-color:#2a3a55}
+.prize--first .prize__place{color:var(--accent)}
+
+/* ============ Snake Pairing ============ */
+.snake{border:1px solid var(--line);border-radius:12px;background:var(--bg-2);padding:clamp(18px,3vw,40px);overflow:hidden}
+.snake__stage{position:relative;display:grid;grid-template-columns:1fr 2.2fr 1fr;gap:clamp(12px,3vw,48px);align-items:center;min-height:420px}
+.snake__bench{display:flex;flex-direction:column;gap:14px;align-items:center}
+.snake__team{font:500 12px var(--cond);letter-spacing:.3em;text-transform:uppercase;margin-bottom:6px}
+.snake__bench--a .snake__team{color:var(--accent)}
+.snake__bench--b .snake__team{color:var(--red)}
+.slot{width:var(--cw);height:var(--ch);border:1px dashed var(--line);border-radius:10px}
+.snake{--cw:clamp(98px,11vw,140px);--ch:clamp(62px,6.4vw,78px)}
+.snake__table{position:relative;display:flex;flex-direction:column;gap:18px;align-items:center}
+.match{position:relative;display:flex;align-items:center;gap:clamp(10px,2vw,26px);padding:10px 18px;border-radius:14px;transition:background .6s var(--ease),box-shadow .6s}
+.match__n{position:absolute;left:50%;top:-4px;transform:translateX(-50%);font:400 10px var(--cond);letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3)}
+.match__vs{font:400 14px var(--serif);color:var(--ink-3);transition:color .5s}
+.match.is-set{background:rgba(111,182,255,.05)}
+.match.is-set .match__vs{color:var(--ink)}
+.match.is-active .slot{border-color:var(--ink-2)}
+.snake__path{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:0}
+.snake__path path{fill:none;stroke:var(--accent);stroke-width:1.2;stroke-dasharray:4 6;opacity:.55}
+
+/* Dice */
+.dice{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;gap:40px;z-index:3;pointer-events:none;opacity:0;transition:opacity .5s}
+.snake[data-step="0"] .dice{opacity:1}
+.snake[data-step="0"] .match{opacity:.15}
+.match{transition:opacity .6s var(--ease),background .6s}
+.die{width:58px;height:58px;border-radius:12px;border:1px solid var(--line);background:var(--surface);display:grid;place-items:center;font:500 24px var(--serif)}
+.die--a{border-color:var(--accent);color:var(--accent)}
+.die--b{border-color:var(--red);color:var(--red)}
+.die.is-rolling{animation:roll .12s linear infinite}
+.die.is-win{box-shadow:0 0 0 1px var(--accent),0 0 40px rgba(111,182,255,.35);transform:scale(1.08)}
+.die{transition:transform .5s var(--ease),box-shadow .5s,opacity .5s}
+.die.is-lose{opacity:.4}
+@keyframes roll{0%{transform:rotate(-8deg) translateY(-2px)}50%{transform:rotate(8deg) translateY(2px)}100%{transform:rotate(-8deg) translateY(-2px)}}
+
+/* Player cards */
+.pcard{position:absolute;left:0;top:0;z-index:2;width:var(--cw);height:var(--ch);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;background:var(--surface);border:1px solid var(--line);
+  transition:transform 1s var(--ease),border-color .5s,box-shadow .6s,opacity .5s;will-change:transform}
+.pcard__team{font:500 18px/1 var(--serif)}
+.pcard__name{position:absolute;left:30px;top:13px;font:400 11px var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2)}
+.pcard__role{align-self:flex-start;font:500 9px var(--cond);letter-spacing:.18em;text-transform:uppercase;padding:3px 7px;border-radius:999px;opacity:0;transform:translateY(-4px);transition:opacity .4s,transform .5s var(--ease)}
+.pcard--a .pcard__team{color:var(--accent)}
+.pcard--b .pcard__team{color:var(--red)}
+.pcard.is-att .pcard__role,.pcard.is-def .pcard__role{opacity:1;transform:none}
+.pcard.is-att .pcard__role{background:var(--ink);color:var(--bg)}
+.pcard.is-def .pcard__role{border:1px solid var(--ink-3);color:var(--ink-2)}
+.pcard.is-moving{z-index:4;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+.pcard--a.is-moving{border-color:var(--accent)}
+.pcard--b.is-moving{border-color:var(--red)}
+.pcard.is-init{box-shadow:0 0 0 1px var(--ink),0 0 28px rgba(236,232,225,.18)}
+.pcard.is-dim{opacity:.35}
+
+.snake__ui{display:grid;grid-template-columns:1fr auto;gap:18px 30px;align-items:center;margin-top:clamp(20px,3vw,34px);padding-top:clamp(20px,3vw,30px);border-top:1px dashed var(--line)}
+.snake__caption{display:flex;gap:18px;align-items:baseline;min-height:56px}
+.snake__stepno{font:400 28px/1 var(--serif);color:var(--accent);min-width:2ch}
+.snake__text{margin:0;font-size:clamp(15px,1.4vw,18px);color:var(--ink);max-width:62ch;transition:opacity .35s,transform .45s var(--ease)}
+.snake__text.is-out{opacity:0;transform:translateY(8px)}
+.snake__text b{font-weight:500}
+.snake__text .ta{color:var(--accent)}.snake__text .tb{color:var(--red)}
+.snake__controls{display:flex;gap:8px}
+.icon-btn{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;font-size:15px;transition:background .3s,border-color .3s,color .3s}
+.icon-btn:hover{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.icon-btn--play .i-play{display:none}
+.snake.is-paused .icon-btn--play .i-play{display:inline}
+.snake.is-paused .icon-btn--play .i-pause{display:none}
+.icon-btn .i-pause{font-size:10px;letter-spacing:-1px}
+.snake__progress{grid-column:1/-1;list-style:none;margin:0;padding:0;display:flex;gap:6px}
+.snake__progress li{flex:1;height:2px;background:var(--line);position:relative;overflow:hidden;border-radius:2px;cursor:pointer}
+.snake__progress li::after{content:"";position:absolute;inset:0;background:var(--ink);transform:scaleX(0);transform-origin:left}
+.snake__progress li.is-done::after{transform:scaleX(1)}
+.snake__progress li.is-current::after{animation:prog var(--dur,4200ms) linear forwards}
+.snake.is-paused .snake__progress li.is-current::after{animation:none;transform:scaleX(1);opacity:.5}
+@keyframes prog{to{transform:scaleX(1)}}
+.note{margin-top:24px;color:var(--ink-2);font-size:15px}
+.note em{font-style:normal;color:var(--ink)}
+
+/* ============ Rules ============ */
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.rule{position:relative;padding:34px 30px 36px;border:1px solid var(--line);border-radius:12px;background:var(--bg-2)}
+.rule__n{position:absolute;right:26px;top:22px;font:400 38px/1 var(--serif);color:var(--line)}
+.rule p{color:var(--ink-2);margin:0 0 12px;font-size:15px}
+.rule strong{color:var(--ink);font-weight:500}
+.ticks{list-style:none;margin:0;padding:0}
+.ticks li{padding:10px 0 10px 22px;border-bottom:1px dashed var(--line);position:relative;font-size:15px;color:var(--ink-2)}
+.ticks li::before{content:"";position:absolute;left:0;top:19px;width:10px;height:1px;background:var(--accent)}
+.bigstat{display:flex;align-items:baseline;gap:14px;padding:6px 0 14px;border-bottom:1px dashed var(--line);margin-bottom:16px}
+.bigstat span{font:400 48px/1 var(--serif)}
+.bigstat small{margin:0;font:400 11px var(--cond);letter-spacing:.2em;text-transform:uppercase}
+
+/* ============ Timeline ============ */
+.timeline{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.tl{position:relative;padding:34px 24px 0 0;display:flex;flex-direction:column;gap:10px}
+.tl::before{content:"";position:absolute;left:0;top:-5px;width:9px;height:9px;border-radius:50%;background:var(--ink-3)}
+.tl.is-next::before{background:var(--accent);box-shadow:0 0 0 6px rgba(111,182,255,.15);animation:pulse 2.4s var(--ease) infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px rgba(111,182,255,0)}}
+.tl__label{font:400 12px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-2)}
+.tl__date{font:400 clamp(28px,3.6vw,48px)/1 var(--serif)}
+.tl__state{font-size:13px;color:var(--ink-3)}
+.tl.is-past .tl__date{color:var(--ink-3)}
+.tl.is-next .tl__state{color:var(--accent)}
+
+/* ============ FAQ ============ */
+.faq{border-top:1px solid var(--line);max-width:980px}
+.faq details{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:26px 0;font:400 clamp(17px,1.7vw,22px)/1.35 var(--sans);transition:color .3s,padding .5s var(--ease)}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";flex:none;width:14px;height:14px;background:linear-gradient(var(--ink),var(--ink)) center/100% 1px no-repeat,linear-gradient(var(--ink),var(--ink)) center/1px 100% no-repeat;transition:transform .5s var(--ease)}
+.faq details[open] summary::after{transform:rotate(135deg)}
+.faq summary:hover{padding-left:12px;color:var(--accent)}
+.faq details>div{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.faq details>div>p{overflow:hidden;margin:0;color:var(--ink-2);max-width:70ch}
+.faq details.is-open>div{grid-template-rows:1fr}
+.faq details.is-open>div>p{padding-bottom:28px}
+.faq a{color:var(--ink);border-bottom:1px solid var(--ink-3)}
+
+/* ============ Marquee ============ */
+.partners{overflow:hidden;border-block:1px dashed var(--line);padding:44px 0;-webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent);mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.partners__track{display:flex;align-items:center;gap:clamp(56px,8vw,120px);width:max-content;padding-right:clamp(56px,8vw,120px);will-change:transform}
+.partner{display:grid;place-items:center;height:96px;flex:none;opacity:.62;transition:opacity .4s,transform .6s var(--ease)}
+.partner img{height:96px;width:auto;max-width:200px;object-fit:contain}
+.partner--wide img{height:52px}
+.partner:hover{opacity:1;transform:translateY(-4px)}
+.partners-cta{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:40px}
+
+/* ============ Contact ============ */
+.contact__grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,8vw,140px);align-items:end}
+.contact address{font-style:normal;color:var(--ink-2);margin:28px 0 8px;font-size:17px}
+.form{display:flex;flex-direction:column;gap:26px}
+.form label{display:flex;flex-direction:column;gap:6px}
+.form label>span{font:400 11px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)}
+.form input:not([type=checkbox]),.form textarea{background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--ink);font:300 17px var(--sans);padding:10px 0;outline:0;resize:vertical;transition:border-color .4s}
+.form input:focus,.form textarea:focus{border-color:var(--ink)}
+.form__check{flex-direction:row!important;align-items:center;gap:12px!important}
+.form__check input{accent-color:var(--accent);width:16px;height:16px}
+.form .btn{align-self:flex-start}
+
+.footer{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;padding:30px var(--gutter);border-top:1px dashed var(--line);font:400 11px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-3)}
+.footer nav{display:flex;gap:26px}
+.footer a:hover{color:var(--ink)}
+
+/* ============ Responsive ============ */
+@media (max-width:980px){
+  .nav__links,.nav__cta{display:none}
+  .nav__burger{display:block}
+  .facts{grid-template-columns:1fr 1fr}
+  .fact{padding:24px 18px 26px 0!important}
+  .fact:nth-child(even){padding-left:18px!important;border-right:0!important}
+  .fact:nth-child(odd){border-right:1px solid var(--line)!important}
+  .split-grid,.contact__grid{grid-template-columns:1fr}
+  .prizes{grid-template-columns:1fr 1fr}
+  .prize--first{grid-column:1/-1}
+  .rules{grid-template-columns:1fr}
+  .hero__side{display:none}
+}
+@media (max-width:720px){
+  .snake{--cw:clamp(78px,24vw,110px);--ch:58px}
+  .snake__stage{grid-template-columns:1fr;grid-template-rows:auto auto auto;gap:22px;min-height:0}
+  .snake__bench{flex-direction:row;justify-content:center;flex-wrap:wrap;gap:8px}
+  .snake__team{width:100%;text-align:center;margin:0}
+  .match{padding:10px 6px;gap:10px}
+  .pcard{padding:8px 9px}
+  .pcard__team{font-size:15px}
+  .pcard__name{font-size:9px;letter-spacing:.12em;left:24px;top:10px}
+  .pcard__role{font-size:7px;padding:2px 5px}
+  .snake__ui{grid-template-columns:1fr}
+  .snake__controls{justify-content:flex-start}
+  .schedule__list{columns:1}
+  .timeline{grid-template-columns:1fr;border-top:0;border-left:1px solid var(--line);margin-left:4px}
+  .tl{padding:0 0 36px 26px}
+  .tl::before{left:-5px;top:4px}
+  .hero__card{position:relative;left:auto;bottom:auto;margin-top:48px}
+  .hero{align-content:center}
+  .dice{gap:24px}
+}
+@media (max-width:480px){
+  .facts{grid-template-columns:1fr}
+  .fact{padding:22px 0!important;border-right:0!important}
+  .prizes{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+
+/* ============ v3: Kreuzer, Intro, Ornamente ============ */
+/* Pixel-Leinwand für den Kreuzer (niedrige Auflösung, hart hochskaliert) */
+.cruiser{position:fixed;inset:0;width:100vw;height:100vh;z-index:42;pointer-events:none;image-rendering:pixelated;image-rendering:crisp-edges}
+
+/* Intro: bis GSAP übernimmt, sind die Hero-Elemente unsichtbar (ohne JS bleibt alles sichtbar) */
+html.js [data-intro]{visibility:hidden}
+html.js .nav{visibility:hidden}
+.skip-intro{position:fixed;right:var(--gutter);bottom:26px;z-index:60;font:400 10px var(--cond);letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3);padding:10px 0;visibility:hidden}
+.skip-intro:hover{color:var(--ink)}
+
+/* Reveals (Startzustand setzt GSAP) */
+.reveal{will-change:transform,opacity}
+.split-mask{overflow:clip;padding-bottom:.08em;margin-bottom:-.08em}
+
+/* Punkt-Ornament wie auf der Originalseite (• ∴ ⁙) */
+.ornament{display:block;width:54px;height:12px;margin-bottom:22px;color:var(--ink)}
+.hero .ornament{margin:30px auto 0}
+
+/* Lichtlinie, wenn der Kreuzer einen Abschnitt erreicht */
+.section::after{content:"";position:absolute;left:0;right:0;top:-1px;height:1px;pointer-events:none;
+  background:linear-gradient(90deg,transparent,var(--accent) 30%,var(--ink) 50%,var(--accent) 70%,transparent);
+  transform:scaleX(0);transform-origin:var(--sweep-origin,right);opacity:0}
+.section.ship-pass::after{animation:shipSweep 1.6s var(--ease) forwards}
+@keyframes shipSweep{0%{transform:scaleX(0);opacity:1}55%{opacity:1}100%{transform:scaleX(1);opacity:0}}
+
+/* ScrollSmoother */
+#smooth-wrapper{overflow:hidden}
+.footer__social{display:flex;gap:18px;align-items:center}
+.footer__social img{width:18px;height:18px;opacity:.6;transition:opacity .3s}
+.footer__social a:hover img{opacity:1}
+.nav__yt img{width:18px;height:18px;opacity:.7}
+
+@media (max-width:720px){
+  .partner{height:70px}
+  .partner img{height:70px}
+  .partner--wide img{height:38px}
+  .partners{padding:32px 0}
+}
+@media (prefers-reduced-motion:reduce){
+  html.js [data-intro],html.js .nav{visibility:visible}
+}
+
+/* Snake Pairing v3: Positionen setzt GSAP, CSS nur für Farben/Rahmen */
+.pcard{transition:border-color .5s,box-shadow .6s,opacity .5s}
+.snake__progress li i{position:absolute;inset:0;background:var(--ink);transform-origin:left;transform:scaleX(0)}
+.snake__text{transition:none}
+
+/* ============ v4 ============ */
+.cruiser{image-rendering:auto}
+.flash{position:fixed;inset:0;z-index:43;pointer-events:none;opacity:0;
+  background:radial-gradient(ellipse at 50% 30%,rgba(214,234,255,.9),rgba(111,182,255,.25) 45%,transparent 75%)}
+
+/* ---------- Zielvisier-Cursor ---------- */
+.cursor__ring{width:64px;height:64px;margin:-32px 0 0 -32px;border:0!important;background:none!important;display:block;transition:none}
+body.cursor-hover .cursor__ring,body.cursor-label .cursor__ring{width:64px;height:64px;margin:-32px 0 0 -32px}
+.reticle{width:100%;height:100%;overflow:visible;fill:none;stroke:var(--ink);stroke-width:1;transition:transform .5s var(--ease)}
+.reticle__circle{stroke-dasharray:3 4.85;opacity:.75;transform-origin:0 0;animation:reticleSpin 14s linear infinite;transition:r .45s var(--ease),stroke .3s,opacity .3s}
+.reticle__ticks{transition:transform .5s var(--ease),stroke .3s;transform-origin:0 0}
+.reticle__brackets{stroke:var(--accent);opacity:0;transform:scale(1.35);transform-origin:0 0;transition:opacity .3s,transform .5s var(--ease)}
+@keyframes reticleSpin{to{transform:rotate(360deg)}}
+body.cursor-hover .reticle__circle,body.cursor-label .reticle__circle{r:10;stroke:var(--accent);opacity:1}
+body.cursor-hover .reticle__ticks,body.cursor-label .reticle__ticks{transform:rotate(45deg) scale(.72);stroke:var(--accent)}
+body.cursor-hover .reticle__brackets,body.cursor-label .reticle__brackets{opacity:1;transform:scale(1)}
+body.cursor-down .reticle{transform:scale(.82)}
+.cursor__label{position:absolute;left:50%;top:100%;transform:translate(-50%,2px);white-space:nowrap;font:500 9px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--accent)!important;opacity:0;transition:opacity .25s}
+body.cursor-label .cursor__label{opacity:1}
+.cursor__dot{width:4px;height:4px;margin:-2px 0 0 -2px;background:var(--accent);mix-blend-mode:normal;box-shadow:0 0 8px var(--accent)}
+.cursor__shot{position:fixed;left:0;top:0;width:40px;height:40px;margin:-20px 0 0 -20px;border:1px solid var(--accent);border-radius:50%;pointer-events:none;z-index:91}
+.cursor__trail{background:#9fd0ff;box-shadow:0 0 6px rgba(111,182,255,.8)}
+
+/* ---------- Punkte-Route (Fortschritt) ---------- */
+.rail{position:fixed;left:18px;top:18vh;bottom:18vh;width:12px;z-index:44;pointer-events:none;opacity:0;transition:opacity .8s var(--ease)}
+.rail.is-on{opacity:1}
+.rail__track{position:absolute;inset:0}
+.rail__dot{position:absolute;left:5px;width:2px;height:2px;background:rgba(236,232,225,.28);transition:background .4s,box-shadow .4s,transform .4s}
+.rail__dot.big{left:4.5px;width:3px;height:3px}
+.rail__dot.on{background:var(--accent)}
+.rail__dot.hot{background:#dff1ff;box-shadow:0 0 6px rgba(111,182,255,.9);transform:scale(1.4)}
+.rail__ship{position:absolute;left:0;top:0;width:12px;height:14px;margin-top:-7px;will-change:transform;
+  background:linear-gradient(180deg,var(--ink),#8f939a);clip-path:polygon(50% 100%,0 0,100% 0);filter:drop-shadow(0 0 6px rgba(111,182,255,.8))}
+.rail .station{position:absolute;left:6px;top:0;transform:translate(-50%,-50%);display:flex;align-items:center;gap:12px;pointer-events:auto;padding:6px}
+.station__pin{width:9px;height:9px;flex:none;transform:rotate(45deg);border:1px solid var(--ink-2);background:var(--bg);transition:background .4s,border-color .4s,box-shadow .4s;position:relative}
+.station__label{position:absolute;left:24px;top:50%;transform:translate(-6px,-50%);font:400 10px/1 var(--cond);letter-spacing:.26em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;
+  background:rgba(7,8,11,.86);border:1px dashed var(--line);border-radius:999px;padding:5px 10px 5px 12px;opacity:0;transition:opacity .35s,transform .45s var(--ease),color .3s,border-color .3s}
+.station:hover .station__label{opacity:1;transform:translate(0,-50%)}
+.station.is-passed .station__pin{border-color:var(--accent)}
+.station[aria-current] .station__pin{background:var(--accent);border-color:var(--accent);box-shadow:0 0 14px rgba(111,182,255,.7)}
+.station[aria-current] .station__label{color:var(--ink);border-color:var(--accent)}
+.station--goal .station__pin{border-color:var(--ink)}
+.station:focus-visible{outline:none}
+.station:focus-visible .station__label{opacity:1;outline:1px solid var(--accent);outline-offset:2px}
+
+/* ---------- Live vom Tisch ---------- */
+.live__grid{display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1fr);gap:clamp(24px,4vw,64px);align-items:end}
+.video{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;border:1px solid var(--line);background:#000;isolation:isolate}
+.video__frame,.video__frame iframe,#yt{position:absolute;inset:0;width:100%;height:100%;border:0;pointer-events:none}
+.video__frame{transform:scale(1.01)}
+.video__poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity .8s var(--ease);z-index:1}
+.video.is-playing .video__poster{opacity:0}
+.video__shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(180deg,rgba(7,8,11,.35),transparent 25%,transparent 70%,rgba(7,8,11,.6))}
+.video__tag{position:absolute;left:16px;top:14px;z-index:3;display:flex;align-items:center;gap:8px;font:500 10px var(--cond);letter-spacing:.26em;text-transform:uppercase;color:var(--ink);
+  background:rgba(7,8,11,.8);border:1px solid rgba(236,232,225,.18);border-radius:999px;padding:6px 12px}
+.video__tag i{width:7px;height:7px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red);animation:recBlink 1.4s steps(2,start) infinite}
+@keyframes recBlink{to{visibility:hidden}}
+.video__sound{position:absolute;left:16px;bottom:18px;z-index:3;display:flex;align-items:center;gap:10px;font:500 11px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--bg);
+  background:var(--ink);border-radius:999px;padding:10px 16px 10px 12px;transition:background .3s,color .3s,transform .5s var(--ease)}
+.video__sound svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.video__sound svg path:first-child{fill:currentColor}
+.video__sound .wave{display:none}
+.video__sound[aria-pressed="true"]{background:rgba(7,8,11,.6);color:var(--ink);border:1px solid rgba(236,232,225,.2)}
+.video__sound[aria-pressed="true"] .wave{display:inline}
+.video__sound[aria-pressed="true"] .x{display:none}
+.video__sound:not([aria-pressed="true"]){animation:soundPulse 2.2s var(--ease) infinite}
+@keyframes soundPulse{0%{box-shadow:0 0 0 0 rgba(236,232,225,.45)}70%{box-shadow:0 0 0 14px rgba(236,232,225,0)}100%{box-shadow:0 0 0 0 rgba(236,232,225,0)}}
+.video__replay{position:absolute;right:16px;bottom:18px;z-index:3;font:500 11px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--ink);
+  border:1px solid rgba(236,232,225,.35);border-radius:999px;padding:10px 16px;background:rgba(7,8,11,.6);opacity:0;pointer-events:none;transition:opacity .4s}
+.video.is-ended .video__replay{opacity:1;pointer-events:auto}
+.video__bar{position:absolute;left:0;right:0;bottom:0;height:2px;z-index:3;background:rgba(236,232,225,.15)}
+.video__bar i{position:absolute;inset:0;background:var(--accent);transform-origin:left;transform:scaleX(0)}
+.live__meta{margin:0 0 18px;border-top:1px solid var(--line)}
+.live__meta div{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px dashed var(--line)}
+.live__meta dt{font:400 11px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--ink-3)}
+.live__meta dd{margin:0;color:var(--ink)}
+
+/* ---------- Finale ---------- */
+.finale{position:relative;min-height:100svh;display:grid;align-items:end;justify-items:center;overflow:hidden;border-top:1px dashed var(--line);padding:0 var(--gutter) 16vh}
+.finale__stars{position:absolute;inset:0;width:100%;height:100%}
+.finale__inner{position:relative;text-align:center;display:flex;flex-direction:column;align-items:center}
+.finale .ornament{margin:0 auto 22px}
+.finale__title{margin:18px 0 38px}
+.btn--xl{padding:24px 44px;font-size:13px;letter-spacing:.3em}
+.finale__cta{position:relative}
+.finale__cta::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none}
+.finale.is-jumped .finale__cta{box-shadow:0 0 0 1px var(--accent),0 0 60px rgba(111,182,255,.35)}
+.finale.is-jumped .finale__cta::after{animation:ctaRing 2.4s var(--ease) infinite}
+@keyframes ctaRing{0%{box-shadow:0 0 0 0 rgba(111,182,255,.55)}80%,100%{box-shadow:0 0 0 22px rgba(111,182,255,0)}}
+.finale__note{margin:22px 0 0;color:var(--ink-3);font-size:13px;letter-spacing:.04em}
+
+@media (max-width:980px){
+  .live__grid{grid-template-columns:1fr}
+}
+@media (max-width:720px){
+  .rail{left:auto;right:4px;top:22vh;bottom:22vh}
+  .rail .station__label{display:none}
+  .rail .station{padding:4px}
+  .station__pin{width:7px;height:7px}
+  .video__sound span{font-size:10px}
+  .btn--xl{padding:20px 30px}
+}
+
+/* ============ v5 ============ */
+/* Pixel-Flieger auf der Punkte-Route */
+.rail__flier{position:absolute;left:6px;top:0;width:0;height:0;will-change:transform}
+.rail__flier canvas{position:absolute;left:-21px;top:-50px;width:42px;height:64px;image-rendering:pixelated;image-rendering:crisp-edges;
+  transition:transform .6s var(--ease);filter:drop-shadow(0 0 4px rgba(236,232,225,.25))}
+.rail__flier.is-up canvas{transform:rotate(180deg)}
+
+/* Der Kreuzer ist der Cursor: Visier und Spur treten zurück, der Punkt markiert die Zeigerspitze */
+.reticle{transition:transform .6s var(--ease),opacity .5s var(--ease)}
+body.cursor-ship .reticle{opacity:0;transform:scale(.3)}
+body.cursor-ship .cursor__trail{opacity:0!important}
+.cursor__trail{transition:opacity .4s}
+body.cursor-ship .cursor__dot{width:3px;height:3px;margin:-1.5px 0 0 -1.5px;opacity:.9}
+@media (max-width:1100px){.rail__flier canvas{left:-10.5px;top:-24px;width:21px;height:32px}}
+
+/* Lokal geöffnet: Vorschaubild + Link statt eingebettetem Player */
+.video.is-offline{cursor:pointer}
+.video.is-offline .video__frame{display:none}
+.video.is-offline .video__sound{left:50%;bottom:50%;transform:translate(-50%,50%);padding:14px 22px 14px 18px}
+.video.is-offline .video__sound svg path{fill:currentColor}
+.video.is-offline .video__bar{display:none}
+
+/* Eingebetteter Clip */
+.video__clip{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;background:#000;z-index:0}
+.video.has-clip .video__frame{display:none}
+
+/* Cedi-Logo ist schwarz auf transparent → auf dunklem Grund invertieren (wie auf der Originalseite: weiß) */
+.partner img[alt="Cedi Unlimited"]{filter:invert(1)}
+.video__hint{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:3;margin:0;width:max-content;max-width:90%;text-align:center;font-size:12px;color:var(--ink-2);background:rgba(7,8,11,.7);border-radius:999px;padding:6px 14px}
+.video__hint b{color:var(--ink);font-weight:500}
+
+</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js"}}</script>
+</head>
+<body>
+
+<!-- Punkt-Ornament der Originalseite: • ∴ ⁙ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="orn" viewBox="0 0 54 12">
+    <circle cx="3" cy="6" r="1.6"/>
+    <circle cx="20" cy="3" r="1.6"/><circle cx="17" cy="9" r="1.6"/><circle cx="23" cy="9" r="1.6"/>
+    <circle cx="37" cy="2.5" r="1.6"/><circle cx="43" cy="2.5" r="1.6"/><circle cx="40" cy="6" r="1.6"/><circle cx="37" cy="9.5" r="1.6"/><circle cx="43" cy="9.5" r="1.6"/>
+  </symbol>
+</svg>
+
+<!-- Kreuzer (Pixel-Leinwand) -->
+<canvas class="cruiser" aria-hidden="true"></canvas>
+<div class="flash" aria-hidden="true"></div>
+
+<!-- Fortschritt: Punkte-Route mit Stationen -->
+<nav class="rail" aria-label="Fortschritt">
+  <div class="rail__track"></div>
+  <div class="rail__flier" aria-hidden="true"><canvas></canvas></div>
+  <a class="station" href="#turnier" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Turnier</span></a>
+  <a class="station" href="#pairing" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Pairing</span></a>
+  <a class="station" href="#live" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Live</span></a>
+  <a class="station" href="#regeln" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Regeln</span></a>
+  <a class="station" href="#kalender" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Kalender</span></a>
+  <a class="station" href="#faq" data-cursor="hover"><span class="station__pin"></span><span class="station__label">FAQ</span></a>
+  <a class="station" href="#kontakt" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Kontakt</span></a>
+  <a class="station station--goal" href="#finale" data-cursor="hover"><span class="station__pin"></span><span class="station__label">Anmelden</span></a>
+</nav>
+<button class="skip-intro" type="button">Intro überspringen</button>
+
+<!-- Cursor -->
+<div class="cursor" aria-hidden="true">
+  <div class="cursor__dot"></div>
+  <div class="cursor__ring">
+    <svg class="reticle" viewBox="-32 -32 64 64">
+      <circle class="reticle__circle" r="15"/>
+      <path class="reticle__ticks" d="M0 -25V-18M0 18V25M-25 0H-18M18 0H25"/>
+      <path class="reticle__brackets" d="M-20 -12V-20H-12M12 -20H20V-12M20 12V20H12M-12 20H-20V12"/>
+    </svg>
+    <span class="cursor__label"></span>
+  </div>
+</div>
+
+<header class="nav">
+  <a href="#top" class="nav__brand" data-cursor="hover">
+    <img src="https://static.wixstatic.com/media/8cb7fb_94af4e85d1234156a6f231723941851f~mv2.png" alt="Fellowship of the Force" width="28" height="25">
+    <span>FoF</span>
+  </a>
+  <nav class="nav__links" aria-label="Hauptnavigation">
+    <a href="#turnier" data-cursor="hover">Turnier</a>
+    <a href="#pairing" data-cursor="hover">Pairing</a>
+    <a href="#live" data-cursor="hover">Live</a>
+    <a href="#regeln" data-cursor="hover">Regeln</a>
+    <a href="#kalender" data-cursor="hover">Kalender</a>
+    <a href="#faq" data-cursor="hover">FAQ</a>
+    <a href="#kontakt" data-cursor="hover">Kontakt</a>
+    <a class="nav__yt" href="https://www.youtube.com/@cedi_unlimited" target="_blank" rel="noopener" aria-label="YouTube" data-cursor="hover"><img src="https://static.wixstatic.com/media/203dcdc2ac8b48de89313f90d2a4cda1.png" alt="" width="18" height="18"></a>
+  </nav>
+  <a class="btn btn--ghost nav__cta" href="https://comic-portal.net/sammelkarten/star-wars-tcg/35710/star-wars-unlimited-fellowship-teamseries-ii.-eventticket" target="_blank" rel="noopener" data-cursor="hover">Anmelden</a>
+  <button class="nav__burger" aria-label="Menü öffnen" aria-expanded="false" data-cursor="hover"><span></span><span></span></button>
+</header>
+
+<div class="mobile-menu" aria-hidden="true">
+  <a href="#turnier">Turnier</a><a href="#pairing">Pairing</a><a href="#live">Live</a><a href="#regeln">Regeln</a><a href="#kalender">Kalender</a><a href="#faq">FAQ</a><a href="#kontakt">Kontakt</a>
+</div>
+
+<div id="smooth-wrapper">
+<div id="smooth-content">
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <canvas class="hero__stars" aria-hidden="true"></canvas>
+    <div class="hero__vignette" aria-hidden="true"></div>
+    <div class="hero__inner">
+      <img class="hero__logo" data-intro src="https://static.wixstatic.com/media/8cb7fb_94af4e85d1234156a6f231723941851f~mv2.png" alt="Fellowship of the Force Logo" width="558" height="506">
+      <h1 class="hero__title" data-intro>Team Series</h1>
+      <p class="hero__sub" data-intro>Competitive Premier · Best-of-Three · Swiss + Top Cut</p>
+      <div class="hero__actions" data-intro>
+        <a class="btn btn--solid magnetic" href="https://comic-portal.net/sammelkarten/star-wars-tcg/35710/star-wars-unlimited-fellowship-teamseries-ii.-eventticket" target="_blank" rel="noopener" data-cursor="hover">Jetzt anmelden</a>
+        <a class="btn btn--text" href="#turnier" data-cursor="hover">Details ↓</a>
+      </div>
+    </div>
+    <aside class="hero__card" data-intro>
+      <span class="eyebrow">Next · Series III</span>
+      <strong>17.10.2026</strong>
+      <span>KNZ Dresden · 20 Teams</span>
+    </aside>
+    <span class="hero__side" data-intro aria-hidden="true">Star Wars Unlimited · 3v3 · Dresden</span>
+  </section>
+
+  <!-- TURNIER -->
+  <section class="section" id="turnier">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">01 — Turnier</span>
+      <h2 class="h2 split">Team Series III</h2>
+      <p class="lead reveal">Kompetitive Star Wars Unlimited Teamturnier-Serie im 3v3-Format.</p>
+    </div>
+
+    <dl class="facts">
+      <div class="fact reveal"><dt>Datum</dt><dd>17. Oktober 2026</dd></div>
+      <div class="fact reveal"><dt>Check-In / Start</dt><dd>09:30 / 10:00 Uhr</dd></div>
+      <div class="fact reveal"><dt>Ort</dt><dd>KNZ – Kultur-/Nachbarschaftszentrum<br><small>Schandauer Straße 64, 01277 Dresden</small></dd></div>
+      <div class="fact reveal"><dt>Startgebühr</dt><dd>150,00 € pro Team<br><small>inkl. 2 Getränke, Sandwiches &amp; Snacks · kein Umtausch / keine Erstattung</small></dd></div>
+      <div class="fact reveal"><dt>Format</dt><dd>3vs3 Team Event<br><small>Premier Constructed</small></dd></div>
+      <div class="fact reveal"><dt>Startplätze</dt><dd>max. 20 Teams<br><small>à 3 Spieler · Vergabe nach Anmeldung · danach Warteliste</small></dd></div>
+    </dl>
+
+    <div class="split-grid">
+      <div class="reveal">
+        <h3 class="h3">Die Serie</h3>
+        <p>Dieses Turnier ist Teil der Fellowship Team Series – einer kompetitiven Star Wars Unlimited Turnierserie. Die Serie besteht aus drei Events pro Jahr, jeweils kurz nach Veröffentlichung eines neuen Sets.</p>
+        <p>Teams aus je drei Spielern treten im Premier Constructed Format gegeneinander an und kämpfen um die Qualifikation für die Finalrunde. Teams melden sich gemeinsam über den Team Captain mit ihrem Teamnamen an und spielen während des gesamten Turniers in derselben Konstellation.</p>
+      </div>
+      <ol class="flow reveal">
+        <li><span class="flow__n">1</span><div><h4>Swiss Phase</h4><p>Alle Teams spielen mehrere Runden. Teams mit ähnlicher Punktzahl werden gegeneinander gepaart.</p></div></li>
+        <li><span class="flow__n">2</span><div><h4>Top Cut</h4><p>Nach den Swiss-Runden erreichen die bestplatzierten Teams den Top Cut – je nach Teilnehmerzahl Top 2 oder Top 4.</p></div></li>
+        <li><span class="flow__n">3</span><div><h4>Single Elimination</h4><p>Im Top Cut wird im K.-o.-System gespielt, bis ein Siegerteam feststeht.</p></div></li>
+      </ol>
+    </div>
+
+    <div class="schedule reveal">
+      <div class="schedule__head">
+        <h3 class="h3">Zeitplan</h3>
+        <span class="muted">20 Teams · 5 Swiss-Runden</span>
+      </div>
+      <ul class="schedule__list">
+        <li><span>Check-In</span><time>09:30</time></li>
+        <li><span>Begrüßung</span><time>09:40</time></li>
+        <li><span>Runde 1</span><time>10:05 – 11:10</time></li>
+        <li><span>Runde 2</span><time>11:15 – 12:20</time></li>
+        <li class="is-break"><span>Pause</span><time>12:20 – 12:50</time></li>
+        <li><span>Runde 3</span><time>12:50 – 13:55</time></li>
+        <li><span>Runde 4</span><time>14:00 – 15:05</time></li>
+        <li><span>Runde 5</span><time>15:10 – 16:15</time></li>
+        <li class="is-top"><span>Top Cut · Top 4</span><time>16:20 – 17:40</time></li>
+        <li class="is-top"><span>Top Cut · Top 2</span><time>17:45 – 19:05</time></li>
+        <li><span>Siegerehrung</span><time>19:10 – 19:30</time></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- PREISPOOL -->
+  <section class="section section--tight" id="preise">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">02 — Preispool</span>
+      <h2 class="h2 split">Der Preispool steht</h2>
+      <p class="lead reveal">Dank der Unterstützung von Asmodee gibt es wieder wunderbare Preise. Alle Booster-Preise gelten pro Team und werden in englischer Sprache ausgegeben.</p>
+    </div>
+    <div class="prizes">
+      <article class="prize prize--first reveal" data-cursor="hover">
+        <span class="prize__place">01</span>
+        <ul><li>4× Regular Display</li><li>1× Carbonite Display</li></ul>
+      </article>
+      <article class="prize reveal" data-cursor="hover">
+        <span class="prize__place">02</span>
+        <ul><li>3× Regular Display</li><li>½× Carbonite Display</li></ul>
+      </article>
+      <article class="prize reveal" data-cursor="hover">
+        <span class="prize__place">03</span>
+        <ul><li>2,5× Regular Display</li><li>½× Carbonite Display</li></ul>
+      </article>
+      <article class="prize reveal" data-cursor="hover">
+        <span class="prize__place">04</span>
+        <ul><li>2,5× Regular Display</li></ul>
+      </article>
+      <article class="prize reveal" data-cursor="hover">
+        <span class="prize__place">05–16</span>
+        <ul><li>1× Regular Display</li><li>3× Weekly Booster</li></ul>
+      </article>
+    </div>
+  </section>
+
+  <!-- SNAKE PAIRING -->
+  <section class="section" id="pairing">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">03 — Format</span>
+      <h2 class="h2 split">Snake Pairing</h2>
+      <p class="lead reveal">Vor jeder Runde würfeln die Team Captains um die Pairing-Initiative. Der Gewinner entscheidet, welches Team den ersten Angreifer stellt. Danach werden die Matchups abwechselnd festgelegt.</p>
+    </div>
+
+    <div class="snake reveal" data-step="0">
+      <div class="snake__stage">
+        <div class="snake__bench snake__bench--a">
+          <span class="snake__team">Team A</span>
+          <div class="slot" data-slot="a-0"></div><div class="slot" data-slot="a-1"></div><div class="slot" data-slot="a-2"></div>
+        </div>
+        <div class="snake__table">
+          <div class="dice" aria-hidden="true">
+            <div class="die die--a"><span>–</span></div>
+            <div class="die die--b"><span>–</span></div>
+          </div>
+          <div class="match" data-match="0"><span class="match__n">Match 1</span><div class="slot" data-slot="m0-a"></div><span class="match__vs">vs</span><div class="slot" data-slot="m0-b"></div></div>
+          <div class="match" data-match="1"><span class="match__n">Match 2</span><div class="slot" data-slot="m1-a"></div><span class="match__vs">vs</span><div class="slot" data-slot="m1-b"></div></div>
+          <div class="match" data-match="2"><span class="match__n">Match 3</span><div class="slot" data-slot="m2-a"></div><span class="match__vs">vs</span><div class="slot" data-slot="m2-b"></div></div>
+          <svg class="snake__path" aria-hidden="true"><path d=""/></svg>
+        </div>
+        <div class="snake__bench snake__bench--b">
+          <span class="snake__team">Team B</span>
+          <div class="slot" data-slot="b-0"></div><div class="slot" data-slot="b-1"></div><div class="slot" data-slot="b-2"></div>
+        </div>
+
+        <div class="pcard pcard--a" data-card="a0"><span class="pcard__team">A</span><span class="pcard__name">Spieler 1</span><span class="pcard__role"></span></div>
+        <div class="pcard pcard--a" data-card="a1"><span class="pcard__team">A</span><span class="pcard__name">Spieler 2</span><span class="pcard__role"></span></div>
+        <div class="pcard pcard--a" data-card="a2"><span class="pcard__team">A</span><span class="pcard__name">Spieler 3</span><span class="pcard__role"></span></div>
+        <div class="pcard pcard--b" data-card="b0"><span class="pcard__team">B</span><span class="pcard__name">Spieler 1</span><span class="pcard__role"></span></div>
+        <div class="pcard pcard--b" data-card="b1"><span class="pcard__team">B</span><span class="pcard__name">Spieler 2</span><span class="pcard__role"></span></div>
+        <div class="pcard pcard--b" data-card="b2"><span class="pcard__team">B</span><span class="pcard__name">Spieler 3</span><span class="pcard__role"></span></div>
+      </div>
+
+      <div class="snake__ui">
+        <div class="snake__caption" aria-live="polite">
+          <span class="snake__stepno">00</span>
+          <p class="snake__text"></p>
+        </div>
+        <div class="snake__controls">
+          <button class="icon-btn" data-act="prev" aria-label="Zurück" data-cursor="hover">←</button>
+          <button class="icon-btn icon-btn--play" data-act="play" aria-label="Pause" data-cursor="hover"><span class="i-pause">❚❚</span><span class="i-play">▶</span></button>
+          <button class="icon-btn" data-act="next" aria-label="Weiter" data-cursor="hover">→</button>
+        </div>
+        <ol class="snake__progress" aria-hidden="true"></ol>
+      </div>
+    </div>
+    <p class="note reveal">Der Spieler, der als <em>Angreifer</em> in ein Matchup gestellt wurde, erhält für dieses Spiel die Initiative.</p>
+  </section>
+
+  <!-- LIVE VOM TISCH -->
+  <section class="section" id="live">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">04 — Live vom Tisch</span>
+      <h2 class="h2 split">Runde 5, live</h2>
+      <p class="lead reveal">So sieht ein Matchup aus, wenn es ernst wird: Feature Match aus der fünften Swiss-Runde der Team Series II – mit Live-Kommentar von Cedi Unlimited.</p>
+    </div>
+    <div class="live__grid">
+      <div class="video reveal" data-cursor-label="Ton an">
+        <div class="video__frame"><div id="yt"></div></div>
+        <img class="video__poster" src="https://i.ytimg.com/vi/PAL4VwYA6dM/hqdefault.jpg" alt="" loading="lazy">
+        <div class="video__shade"></div>
+        <span class="video__tag"><i></i>Series II · Runde 5</span>
+        <button class="video__sound" type="button" aria-pressed="false" data-cursor="hover">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4z"/><path class="wave" d="M16 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/><path class="x" d="M16 9l5 6M21 9l-5 6"/></svg>
+          <span>Ton an</span>
+        </button>
+        <button class="video__replay" type="button" data-cursor="hover">↻ Nochmal</button>
+        <div class="video__bar"><i></i></div>
+      </div>
+      <aside class="live__aside reveal">
+        <dl class="live__meta">
+          <div><dt>Event</dt><dd>Team Series II</dd></div>
+          <div><dt>Phase</dt><dd>Swiss · Runde 5</dd></div>
+          <div><dt>Stream</dt><dd>Cedi Unlimited</dd></div>
+        </dl>
+        <a class="btn btn--text" href="https://www.youtube.com/watch?v=PAL4VwYA6dM&amp;t=21527s" target="_blank" rel="noopener" data-cursor="hover">Ganzen Stream ansehen ↗</a>
+      </aside>
+    </div>
+  </section>
+
+  <!-- REGELN -->
+  <section class="section" id="regeln">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">05 — Regeln</span>
+      <h2 class="h2 split">Das Wichtigste</h2>
+      <p class="lead reveal">Wir spielen nach den offiziellen Turnierrichtlinien von Star Wars Unlimited im Premier Constructed Format. Alle Spieler sind selbst dafür verantwortlich, mit den grundlegenden Spielregeln vertraut zu sein.</p>
+    </div>
+    <div class="rules">
+      <article class="rule reveal">
+        <span class="rule__n">A</span>
+        <h3 class="h3">Deckregeln</h3>
+        <ul class="ticks">
+          <li>mind. 50 Karten im Main Deck</li>
+          <li>10 Karten Side Deck</li>
+          <li>1 Leader · 1 Base</li>
+          <li>Identische, undurchsichtige Sleeves</li>
+          <li>Vollständige Deckliste vor Turnierbeginn</li>
+          <li>Keine Deckänderung während des Turniers</li>
+        </ul>
+      </article>
+      <article class="rule reveal">
+        <span class="rule__n">B</span>
+        <h3 class="h3">Deck Limitation</h3>
+        <p>Leader und Bases müssen innerhalb eines Teams einzigartig sein.</p>
+        <p>Teamübergreifend gilt die <strong>3-Kopien-Regel</strong>: Jede Karte darf in allen Decks eines Teams zusammen höchstens dreimal enthalten sein.</p>
+        <p class="muted">Das fördert abwechslungsreiche Lineups und verhindert nahezu identische Decks innerhalb eines Teams.</p>
+      </article>
+      <article class="rule reveal">
+        <span class="rule__n">C</span>
+        <h3 class="h3">Spielstruktur</h3>
+        <div class="bigstat"><span>Bo3</span><small>Best-of-Three</small></div>
+        <div class="bigstat"><span>60′</span><small>Spielzeit pro Runde</small></div>
+        <p class="muted">Wer zuerst zwei Spiele gewinnt, entscheidet das Match. Alle Karten müssen zum Turnierzeitpunkt im Premier Format legal sein.</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- KALENDER -->
+  <section class="section section--tight" id="kalender">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">06 — Kalender</span>
+      <h2 class="h2 split">Drei Events. Ein Jahr.</h2>
+      <p class="lead reveal">Jede Series findet kurz nach dem Release eines neuen Sets statt.</p>
+    </div>
+    <ol class="timeline">
+      <li class="tl is-past reveal"><span class="tl__label">Series I · Frühling</span><time class="tl__date">26.05.2026</time><span class="tl__state">Vorbei</span></li>
+      <li class="tl is-past reveal"><span class="tl__label">Series II · Sommer</span><time class="tl__date">08.08.2026</time><span class="tl__state">Vorbei</span></li>
+      <li class="tl is-next reveal"><span class="tl__label">Series III · Herbst</span><time class="tl__date">17.10.2026</time><span class="tl__state">Anmeldung offen</span></li>
+    </ol>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">07 — FAQ</span>
+      <h2 class="h2 split">Häufige Fragen</h2>
+    </div>
+    <div class="faq">
+      <details class="reveal"><summary data-cursor="hover">Welches Format wird beim Turnier gespielt?</summary><div><p>Premier Constructed nach den offiziellen Turnierrichtlinien von Star Wars Unlimited.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wie viele Spieler sind in einem Team?</summary><div><p>Ein Team besteht aus 3 Spielern, die das gesamte Turnier in derselben Konstellation spielen.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wie gewinnt ein Team eine Runde?</summary><div><p>Pro Runde werden drei Matches gespielt (je Best-of-Three). Das Team, das die Mehrheit der Matches gewinnt, gewinnt die Runde.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Muss ich eine Deckliste abgeben?</summary><div><p>Ja. Vor Turnierbeginn muss jeder Spieler eine vollständige Deckliste abgeben. Danach darf das Deck nicht mehr verändert werden.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wie ist der Turnierablauf?</summary><div><p>Swiss-Runden, anschließend Top Cut (Top 2 oder Top 4) im Single-Elimination-Format.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wie lange dauert eine Runde?</summary><div><p>60 Minuten Spielzeit pro Runde.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wann beginnt das Turnier?</summary><div><p>Check-In ab 09:30 Uhr, Start um 10:00 Uhr.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Wie viele Teams können teilnehmen?</summary><div><p>Maximal 20 Teams. Plätze werden in der Reihenfolge der Anmeldung vergeben, danach gibt es eine Warteliste.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">Gibt es einen Preispool?</summary><div><p>Ja – siehe <a href="#preise">Preispool</a>. Die Preise werden von Asmodee unterstützt.</p></div></details>
+      <details class="reveal"><summary data-cursor="hover">An wen kann ich mich bei Fragen wenden?</summary><div><p>Bei Fragen zum Turnier könnt ihr euch jederzeit an das Organisationsteam wenden – nutzt dafür das <a href="#kontakt">Kontaktformular</a>.</p></div></details>
+    </div>
+  </section>
+
+  <!-- PARTNER -->
+  <section class="section section--tight" id="partner">
+    <div class="section__head">
+      <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow reveal">08 — Partner</span>
+      <h2 class="h2 split">Partner</h2>
+      <p class="lead reveal">Hast du Interesse daran, uns zu unterstützen? Werde Partner und erreiche eine engagierte Community von Star Wars Unlimited Spielern und Fans.</p>
+    </div>
+    <div class="partners reveal" aria-label="Partner">
+      <div class="partners__track">
+        <a class="partner" href="https://www.youtube.com/@cedi_unlimited" target="_blank" rel="noopener" data-cursor="hover"><img src="https://static.wixstatic.com/media/8cb7fb_b09fa789d0544db4b6144ed97f506bb5~mv2.png" alt="Cedi Unlimited" width="158" height="195" loading="lazy"></a>
+        <a class="partner" href="https://comic-portal.net/" target="_blank" rel="noopener" data-cursor="hover"><img src="https://static.wixstatic.com/media/8cb7fb_77c0085f074e4460b07aa49d13cce746~mv2.png" alt="Comic Portal Fantasy" width="158" height="200" loading="lazy"></a>
+        <a class="partner" href="#top" data-cursor="hover"><img src="https://static.wixstatic.com/media/8cb7fb_4b91ee203dff4f5aad636222967ad699~mv2.png" alt="Fellowship of the Force" width="196" height="200" loading="lazy"></a>
+        <a class="partner partner--wide" href="https://www.asmodee.de/" target="_blank" rel="noopener" data-cursor="hover"><img src="https://static.wixstatic.com/media/8cb7fb_96bd419837a64244a01cd4c280c71aaa~mv2.png" alt="Asmodee" width="184" height="83" loading="lazy"></a>
+        <a class="partner" href="https://www.youtube.com/@HolocronCardHub" target="_blank" rel="noopener" data-cursor="hover"><img src="https://static.wixstatic.com/media/8cb7fb_58c017176f4d4e2886d3502c07cf43ab~mv2.png" alt="Holocron Card Hub" width="184" height="184" loading="lazy"></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- KONTAKT -->
+  <section class="section contact" id="kontakt">
+    <div class="contact__grid">
+      <div>
+        <svg class="ornament reveal" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+        <span class="eyebrow reveal">09 — Kontakt</span>
+        <h2 class="h2 split">Schreib uns</h2>
+        <address class="reveal">Kultur-/Nachbarschaftszentrum<br>Schandauer Straße 64<br>01277 Dresden</address>
+        <a class="btn btn--text reveal" href="https://www.youtube.com/@cedi_unlimited" target="_blank" rel="noopener" data-cursor="hover">YouTube ↗</a>
+      </div>
+      <form class="form reveal" onsubmit="event.preventDefault(); this.querySelector('.form__msg').hidden=false;">
+        <label><span>Name</span><input name="name" required autocomplete="name"></label>
+        <label><span>E-Mail</span><input name="email" type="email" required autocomplete="email"></label>
+        <label><span>Nachricht</span><textarea name="message" rows="3" required></textarea></label>
+        <label class="form__check"><input type="checkbox" name="newsletter"> <span>Newsletter abonnieren</span></label>
+        <button class="btn btn--solid magnetic" type="submit" data-cursor="hover">Senden</button>
+        <p class="form__msg muted" hidden>Formular-Versand ist in diesem Entwurf noch nicht angebunden.</p>
+      </form>
+    </div>
+  </section>
+  <!-- FINALE: der Kreuzer springt, der Button bleibt -->
+  <section class="finale" id="finale">
+    <canvas class="finale__stars" aria-hidden="true"></canvas>
+    <div class="finale__inner">
+      <svg class="ornament" aria-hidden="true"><use href="#orn" fill="currentColor"/></svg>
+      <span class="eyebrow">Series III · 17.10.2026 · KNZ Dresden</span>
+      <h2 class="h2 split finale__title">Bereit für den Sprung?</h2>
+      <a class="btn btn--solid btn--xl finale__cta magnetic" href="https://comic-portal.net/sammelkarten/star-wars-tcg/35710/star-wars-unlimited-fellowship-teamseries-ii.-eventticket" target="_blank" rel="noopener" data-cursor="hover">Jetzt anmelden</a>
+      <p class="finale__note">max. 20 Teams · 150 € pro Team · Plätze nach Anmeldung</p>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <span>© 2026 Fellowship of the Force</span>
+  <div class="footer__social">
+    <a href="https://www.youtube.com/@cedi_unlimited" target="_blank" rel="noopener" aria-label="YouTube Cedi Unlimited" data-cursor="hover"><img src="https://static.wixstatic.com/media/203dcdc2ac8b48de89313f90d2a4cda1.png" alt="" width="18" height="18"></a>
+    <a href="https://www.youtube.com/channel/UCcuUenS9HPRVQyPPkH6yu5A" target="_blank" rel="noopener" aria-label="YouTube Fellowship of the Force" data-cursor="hover"><img src="https://static.wixstatic.com/media/203dcdc2ac8b48de89313f90d2a4cda1.png" alt="" width="18" height="18"></a>
+  </div>
+  <nav><a href="https://www.fof-dresden.de/impressum" data-cursor="hover">Impressum</a><a href="https://www.fof-dresden.de/datenschutz" data-cursor="hover">Datenschutz</a></nav>
+</footer>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollSmoother.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/SplitText.min.js"></script>
+<script>
+(() => {
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const clamp01 = n => Math.max(0, Math.min(1, n));
+
+  if (!window.gsap) {   // ohne GSAP (offline): Inhalt einfach zeigen
+    document.documentElement.classList.remove('js');
+    return;
+  }
+  gsap.registerPlugin(ScrollTrigger, ScrollSmoother, ScrollToPlugin, SplitText);
+
+  /* =========================================================
+     Sternenfelder (Hero startet im Hyperraum, Finale springt mit)
+     ========================================================= */
+  function starfield(cv, { warp = 0, mouse = false } = {}) {
+    const st = { warp, boost: 0, target: 0 };
+    if (!cv) return st;
+    const ctx = cv.getContext('2d');
+    let W, H, running = true, pmx = 0, pmy = 0, cmx = 0, cmy = 0, lastS = scrollY, scrollV = 0;
+    const stars = [];
+    const N = innerWidth < 720 ? 260 : 520;
+    const resize = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 1.5);
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.fillStyle = '#07080b'; ctx.fillRect(0, 0, W, H);
+    };
+    const spawn = (s = {}) => {
+      s.x = (Math.random() - 0.5) * 2; s.y = (Math.random() - 0.5) * 2;
+      s.z = Math.random() * 0.9 + 0.1; s.pz = s.z;
+      s.hue = Math.random() < 0.7 ? 212 : 200 + Math.random() * 30;
+      return s;
+    };
+    resize(); addEventListener('resize', resize);
+    for (let i = 0; i < N; i++) stars.push(spawn());
+    if (mouse) addEventListener('mousemove', e => { pmx = e.clientX / innerWidth - 0.5; pmy = e.clientY / innerHeight - 0.5; }, { passive: true });
+    ScrollTrigger.create({ trigger: cv.parentElement, start: 'top bottom', end: 'bottom top', onToggle: s => { running = s.isActive; } });
+    gsap.ticker.add(() => {
+      if (!running) return;
+      const s = scrollY;
+      scrollV = lerp(scrollV, Math.abs(s - lastS), 0.1); lastS = s;
+      st.boost = lerp(st.boost, st.target + (mouse ? Math.min(scrollV / 40, 1) : 0), 0.05);
+      cmx = lerp(cmx, pmx, 0.04); cmy = lerp(cmy, pmy, 0.04);
+      const speed = reduce ? 0 : 0.0016 + st.boost * 0.014 + st.warp * 0.06;
+      ctx.fillStyle = `rgba(7,8,11,${Math.max(0.05, 0.55 - st.boost * 0.3 - st.warp * 0.5)})`;
+      ctx.fillRect(0, 0, W, H);
+      const cx = W / 2 - cmx * 60, cy = H * 0.45 - cmy * 40, f = Math.max(W, H) * 0.5;
+      for (const p of stars) {
+        p.pz = p.z; p.z -= speed;
+        if (p.z <= 0.02) { spawn(p); p.z = p.pz = 1; continue; }
+        const x = cx + (p.x / p.z) * f, y = cy + (p.y / p.z) * f;
+        const px = cx + (p.x / p.pz) * f, py = cy + (p.y / p.pz) * f;
+        if (x < -50 || x > W + 50 || y < -50 || y > H + 50) { spawn(p); p.z = p.pz = 1; continue; }
+        const a = Math.min(1, 0.25 + (1 - p.z) * 1.4);
+        ctx.strokeStyle = `hsla(${p.hue},90%,${76 + (1 - p.z) * 20}%,${a})`;
+        ctx.lineWidth = Math.max(0.8, (1 - p.z) * 2.4);
+        ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(x + 0.1, y + 0.1); ctx.stroke();
+      }
+    });
+    return st;
+  }
+  const FX = starfield($('.hero__stars'), { warp: reduce ? 0 : 1, mouse: true });
+  const FIN = starfield($('.finale__stars'));
+  $$('.hero .btn').forEach(b => {
+    b.addEventListener('mouseenter', () => { FX.target = 1; });
+    b.addEventListener('mouseleave', () => { FX.target = 0; });
+  });
+
+  /* =========================================================
+     Smooth Scroll + Navigation
+     ========================================================= */
+  const smoother = reduce ? null : ScrollSmoother.create({
+    wrapper: '#smooth-wrapper', content: '#smooth-content', smooth: 1.15, effects: true, smoothTouch: 0.1,
+  });
+  window.SITE = { smoother };
+  const content = $('#smooth-content');
+  const visScroll = () => (smoother ? -gsap.getProperty(content, 'y') : scrollY);
+  const scrollToTarget = target => {
+    const el = typeof target === 'string' ? $(target) : target;
+    if (smoother) smoother.scrollTo(el || 0, true, 'top 40px');
+    else gsap.to(window, { scrollTo: { y: el || 0, offsetY: 40 }, duration: reduce ? 0 : 1.2, ease: 'power3.inOut' });
+  };
+  $$('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    e.preventDefault();
+    document.body.classList.remove('menu-open');
+    scrollToTarget(id === '#' || id === '#top' ? 0 : id);
+  }));
+
+  const nav = $('.nav');
+  ScrollTrigger.create({
+    start: 0, end: 'max',
+    onUpdate: self => {
+      const y = self.scroll();
+      nav.classList.toggle('is-scrolled', y > 40);
+      nav.classList.toggle('is-hidden', self.direction === 1 && y > 400 && !document.body.classList.contains('menu-open'));
+    },
+  });
+  const navLinks = $$('.nav__links a[href^="#"]');
+  $$('main section[id]').forEach(sec => ScrollTrigger.create({
+    trigger: sec, start: 'top 50%', end: 'bottom 50%',
+    onToggle: self => { if (self.isActive) navLinks.forEach(a => a.classList.toggle('is-active', a.getAttribute('href') === '#' + sec.id)); },
+  }));
+  $('.nav__burger').addEventListener('click', e => {
+    const open = document.body.classList.toggle('menu-open');
+    e.currentTarget.setAttribute('aria-expanded', open);
+  });
+
+  /* =========================================================
+     Cursor: Zielvisier mit Triebwerksspur
+     ========================================================= */
+  if (finePointer && !reduce) {
+    document.body.classList.add('has-cursor');
+    const cursor = $('.cursor'), dot = $('.cursor__dot'), ring = $('.cursor__ring'), label = $('.cursor__label');
+    gsap.set([dot, ring], { x: -100, y: -100 });
+    const dx = gsap.quickTo(dot, 'x', { duration: 0.06 }), dy = gsap.quickTo(dot, 'y', { duration: 0.06 });
+    const rx = gsap.quickTo(ring, 'x', { duration: 0.45, ease: 'power3' }), ry = gsap.quickTo(ring, 'y', { duration: 0.45, ease: 'power3' });
+    const TRAIL = 12, trail = [];
+    for (let i = 0; i < TRAIL; i++) {
+      const d = document.createElement('div');
+      d.className = 'cursor__trail'; d.style.opacity = (1 - i / TRAIL) * 0.55;
+      cursor.appendChild(d);
+      trail.push({ el: d, x: -99, y: -99 });
+    }
+    let mx = -99, my = -99;
+    addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; dx(mx); dy(my); rx(mx); ry(my); }, { passive: true });
+    addEventListener('mousedown', e => {
+      document.body.classList.add('cursor-down');
+      const s = document.createElement('div'); s.className = 'cursor__shot'; cursor.appendChild(s);
+      gsap.fromTo(s, { x: e.clientX, y: e.clientY, scale: 0.3, opacity: 1 }, { scale: 1.9, opacity: 0, duration: 0.6, ease: 'power2.out', onComplete: () => s.remove() });
+    });
+    addEventListener('mouseup', () => document.body.classList.remove('cursor-down'));
+    gsap.ticker.add(() => {
+      let px = mx, py = my;
+      trail.forEach((t, i) => {
+        t.x = lerp(t.x, px, 0.42 - i * 0.018); t.y = lerp(t.y, py, 0.42 - i * 0.018);
+        t.el.style.transform = `translate(${t.x - 1.5}px,${t.y - 1.5}px) scale(${1 - i / TRAIL})`;
+        px = t.x; py = t.y;
+      });
+    });
+    document.addEventListener('mouseover', e => {
+      const lab = e.target.closest('[data-cursor-label]');
+      const hov = e.target.closest('[data-cursor="hover"], a, button, summary, input, textarea');
+      const useLabel = lab && !(hov && lab.contains(hov) && hov !== lab);
+      document.body.classList.toggle('cursor-label', !!useLabel);
+      document.body.classList.toggle('cursor-hover', !useLabel && !!hov);
+      if (useLabel) label.textContent = lab.dataset.cursorLabel;
+    });
+    $$('.magnetic').forEach(b => {
+      const bx = gsap.quickTo(b, 'x', { duration: 0.6, ease: 'elastic.out(1,0.5)' });
+      const by = gsap.quickTo(b, 'y', { duration: 0.6, ease: 'elastic.out(1,0.5)' });
+      b.addEventListener('mousemove', e => {
+        const r = b.getBoundingClientRect();
+        bx((e.clientX - r.left - r.width / 2) * 0.3); by((e.clientY - r.top - r.height / 2) * 0.4);
+      });
+      b.addEventListener('mouseleave', () => { bx(0); by(0); });
+    });
+  }
+
+  /* Preis-Spotlight + FAQ */
+  $$('.prize').forEach(p => p.addEventListener('mousemove', e => {
+    const r = p.getBoundingClientRect();
+    p.style.setProperty('--mx', `${e.clientX - r.left}px`);
+    p.style.setProperty('--my', `${e.clientY - r.top}px`);
+  }));
+  $$('.faq details').forEach(d => {
+    $('summary', d).addEventListener('click', e => {
+      e.preventDefault();
+      const close = o => { o.classList.remove('is-open'); gsap.delayedCall(0.55, () => { o.open = false; ScrollTrigger.refresh(); }); };
+      if (d.open) close(d);
+      else {
+        $$('.faq details.is-open').forEach(close);
+        d.open = true;
+        requestAnimationFrame(() => requestAnimationFrame(() => d.classList.add('is-open')));
+        gsap.delayedCall(0.65, () => ScrollTrigger.refresh());
+      }
+    });
+  });
+
+  /* Partner-Laufband mit echten Logos */
+  (() => {
+    const track = $('.partners__track');
+    if (!track) return;
+    [...track.children].forEach(c => { const k = c.cloneNode(true); k.setAttribute('aria-hidden', 'true'); k.tabIndex = -1; track.appendChild(k); });
+    if (reduce) return;
+    const loop = gsap.to(track, { xPercent: -50, ease: 'none', duration: 34, repeat: -1 });
+    track.addEventListener('mouseenter', () => gsap.to(loop, { timeScale: 0.15, duration: 0.6 }));
+    track.addEventListener('mouseleave', () => gsap.to(loop, { timeScale: 1, duration: 0.6 }));
+  })();
+
+  /* =========================================================
+     Start: nach Schriften (SplitText) und Kreuzer (Three.js)
+     ========================================================= */
+  const cruiserReady = new Promise(res => {
+    if ('CRUISER' in window) return res(window.CRUISER);
+    addEventListener('cruiser-ready', e => res(e.detail), { once: true });
+    setTimeout(() => res(window.CRUISER || null), 5000);
+  });
+  const fontsReady = Promise.race([document.fonts ? document.fonts.ready : Promise.resolve(), new Promise(r => setTimeout(r, 1800))]);
+
+  Promise.all([fontsReady, cruiserReady]).then(([, api]) => {
+    /* Reveals */
+    const reveals = $$('.reveal');
+    if (!reduce) {
+      gsap.set(reveals, { autoAlpha: 0, y: 34 });
+      ScrollTrigger.batch(reveals, {
+        start: 'top 90%', once: true,
+        onEnter: batch => gsap.to(batch, { autoAlpha: 1, y: 0, duration: 1.2, ease: 'expo.out', stagger: 0.08, overwrite: true }),
+      });
+    }
+    /* Überschriften */
+    $$('.h2.split').forEach(h => {
+      const split = SplitText.create(h, { type: 'words,chars', mask: 'words', wordsClass: 'split-word' });
+      if (reduce) return;
+      gsap.from(split.chars, {
+        yPercent: 115, duration: 1.1, ease: 'expo.out', stagger: 0.024,
+        scrollTrigger: { trigger: h, start: 'top 88%', once: true },
+      });
+    });
+    initSnake();
+    initRail();
+    initVideo();
+    initFinale(api);
+    runIntro(api);
+    ScrollTrigger.refresh();
+  });
+  addEventListener('load', () => ScrollTrigger.refresh());
+
+  /* =========================================================
+     Intro: Hyperraum → Kreuzer schwebt wie im Filmvorspann ins Bild
+     ========================================================= */
+  function runIntro(api) {
+    const heroEls = {
+      logo: $('.hero__logo'), title: $('.hero__title'), sub: $('.hero__sub'),
+      actions: $('.hero__actions'), card: $('.hero__card'), side: $('.hero__side'),
+    };
+    const titleSplit = SplitText.create(heroEls.title, { type: 'chars', mask: 'chars' });
+    const skipBtn = $('.skip-intro'), flash = $('.flash'), rail = $('.rail');
+    if (reduce || scrollY > innerHeight * 0.5) {
+      gsap.set([...Object.values(heroEls), nav], { autoAlpha: 1, clearProps: 'transform,filter' });
+      FX.warp = 0; rail.classList.add('is-on');
+      api?.fly();
+      return;
+    }
+    smoother?.paused(true);
+    gsap.set(heroEls.logo, { autoAlpha: 0, scale: 0.92, filter: 'blur(12px)' });
+    gsap.set([heroEls.sub, heroEls.actions, heroEls.card, heroEls.side, nav], { autoAlpha: 0, y: 16 });
+    gsap.set(heroEls.title, { autoAlpha: 1 });
+    gsap.set(titleSplit.chars, { yPercent: 120 });
+
+    const tl = gsap.timeline({
+      defaults: { ease: 'power2.out' },
+      onComplete: () => {
+        smoother?.paused(false);
+        gsap.to(skipBtn, { autoAlpha: 0, duration: 0.3 });
+        rail.classList.add('is-on');
+      },
+    });
+    tl.addLabel('hyperspace', 0).addLabel('arrive', 0.45).addLabel('brand', 2.65).addLabel('bank', 4.65)
+      .to(FX, { warp: 0, duration: 2, ease: 'power3.out' }, 'hyperspace')
+      .fromTo(skipBtn, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.5 }, 0.4)
+      .fromTo(flash, { opacity: 0.55 }, { opacity: 0, duration: 0.9, ease: 'power2.out', immediateRender: false }, 'arrive')
+      .to(heroEls.logo, { autoAlpha: 1, scale: 1, filter: 'blur(0px)', duration: 1.6, ease: 'expo.out' }, 'brand')
+      .to(titleSplit.chars, { yPercent: 0, duration: 1.2, ease: 'expo.out', stagger: 0.05 }, 'brand+=0.5')
+      .to([heroEls.sub, heroEls.actions], { autoAlpha: 1, y: 0, duration: 1, stagger: 0.12 }, 'brand+=1')
+      .to([nav, heroEls.card, heroEls.side], { autoAlpha: 1, y: 0, duration: 1, stagger: 0.1 }, 'brand+=1.3');
+    if (api) api.intro(tl); else tl.to({}, { duration: 0.1 }, 'bank');
+
+    const skip = () => { if (tl.isActive() && tl.timeScale() === 1) tl.timeScale(5); };
+    skipBtn.addEventListener('click', skip);
+    addEventListener('wheel', skip, { passive: true, once: true });
+    addEventListener('touchstart', skip, { passive: true, once: true });
+    addEventListener('keydown', skip, { once: true });
+  }
+
+  /* =========================================================
+     X-Wing (Pixel) für die Punkte-Route
+     ========================================================= */
+  function pixelFlier(cv) {
+    // X-Wing in Draufsicht, Nase nach unten (in Flugrichtung auf der Leiste); Raster 21 × 25 Pixel
+    const W = 21, H = 25, FL = 7;
+    const PAL = { K: '#101218', D: '#3f4656', G: '#707a8e', L: '#b4bdcb', W: '#ece8e1', R: '#e0523f', C: '#6fb6ff', c: '#2e6fd6' };
+    const grid = Array.from({ length: H }, () => Array(W).fill(null));
+    const rect = (x0, y0, x1, y1, col) => { for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) grid[y][x] = col; };
+    const mirror = (x0, y0, x1, y1, col) => { rect(x0, y0, x1, y1, col); rect(W - 1 - x1, y0, W - 1 - x0, y1, col); };
+    // Flügel (S-Foils offen): zur Spitze hin schmaler, mit rotem Staffelstreifen
+    mirror(1, 4, 2, 6, 'L'); mirror(3, 3, 6, 7, 'L');
+    mirror(3, 3, 6, 3, 'W');                 // Lichtkante
+    mirror(1, 5, 5, 5, 'R'); mirror(3, 6, 4, 6, 'R');
+    mirror(1, 7, 6, 7, 'G');                 // Schattenkante
+    // Laserkanonen an den Flügelspitzen, weit nach vorn
+    mirror(0, 2, 0, 17, 'G'); mirror(0, 18, 0, 19, 'W');
+    // Triebwerksgondeln an der Flügelwurzel
+    mirror(7, 1, 8, 9, 'G'); mirror(7, 1, 7, 9, 'D'); mirror(7, 9, 8, 9, 'K');
+    // Rumpf, Cockpit, Astromech-Droide, Nase
+    rect(9, 1, 11, 18, 'L'); rect(10, 2, 10, 16, 'W'); rect(10, 0, 10, 0, 'D');
+    rect(10, 6, 10, 6, 'W'); rect(10, 7, 10, 7, 'C');                   // Droide (Kuppel + Blau)
+    rect(9, 10, 9, 13, 'K'); rect(11, 10, 11, 13, 'K'); rect(10, 10, 10, 10, 'C'); rect(10, 11, 10, 13, 'c');   // Cockpit
+    rect(9, 15, 9, 15, 'R'); rect(11, 15, 11, 15, 'R');               // Nasenmarkierung
+    rect(9, 19, 11, 19, 'L'); rect(9, 20, 11, 20, 'G'); rect(10, 21, 10, 23, 'L'); rect(10, 24, 10, 24, 'D');
+    const ENGINES = [7, 8, 12, 13];
+    const FLAME = ['#ffffff', '#ffd6c8', '#ff7a5c', '#c2362b'];
+
+    cv.width = W; cv.height = H + FL;
+    const g = cv.getContext('2d');
+    const st = { thrust: 0.3 };
+    let frame = 0, last = 0;
+    const draw = () => {
+      g.clearRect(0, 0, cv.width, cv.height);
+      ENGINES.forEach((x, k) => {                                   // Flamme nach hinten (oben)
+        let len = Math.round(2 + st.thrust * 4 + ((frame + k) % 3) - 1);
+        len = Math.max(1, Math.min(FL, len));
+        for (let j = 0; j < len; j++) {
+          const f = j / len, ci = f < 0.25 ? 0 : f < 0.5 ? 1 : f < 0.8 ? 2 : 3;
+          if (ci === 3 && (j + k + frame) % 2) continue;
+          g.fillStyle = FLAME[ci]; g.fillRect(x, FL - 1 - j + 1, 1, 1);
+        }
+      });
+      for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+        const c = grid[y][x];
+        if (c) { g.fillStyle = PAL[c]; g.fillRect(x, y + FL, 1, 1); }
+      }
+    };
+    gsap.ticker.add(t => { if (t - last > 0.07) { last = t; frame++; draw(); } });
+    draw();
+    return st;
+  }
+
+  /* =========================================================
+     Punkte-Route: zeigt, wie weit man ist
+     ========================================================= */
+  function initRail() {
+    const rail = $('.rail'), track = $('.rail__track'), flier = $('.rail__flier');
+    const sprite = pixelFlier(flier.querySelector('canvas'));
+    const stations = $$('.rail .station');
+    const secs = stations.map(s => $(s.getAttribute('href')));
+    const GAP = 11;
+    let dots = [], H = 0, stationPos = [];
+    const build = () => {
+      H = track.clientHeight; track.innerHTML = '';
+      dots = [];
+      for (let i = 0, n = Math.floor(H / GAP); i <= n; i++) {
+        const d = document.createElement('i');
+        d.className = 'rail__dot' + (i % 5 === 0 ? ' big' : '');
+        d.style.top = i * GAP + 'px';
+        track.appendChild(d); dots.push({ el: d, state: 0, big: i % 5 === 0 });
+      }
+      const max = ScrollTrigger.maxScroll(window) || 1, vis = visScroll();
+      stationPos = secs.map(sec => (sec ? clamp01((sec.getBoundingClientRect().top + vis - innerHeight * 0.45) / max) : 0));
+      stationPos[stationPos.length - 1] = Math.min(stationPos[stationPos.length - 1], 0.995);
+      stations.forEach((st, i) => { st.style.top = stationPos[i] * H + 'px'; });
+      lastN = -1;
+    };
+    let lastN = -1, active = -2, lastP = 0, goingUp = false;
+    ScrollTrigger.addEventListener('refresh', build);
+    build();
+    gsap.ticker.add(() => {
+      const p = clamp01(visScroll() / (ScrollTrigger.maxScroll(window) || 1));
+      const y = p * H;
+      // Flugrichtung: runter = Nase nach unten, beim Zurückscrollen dreht er um
+      if (Math.abs(p - lastP) > 0.0004) { const up = p < lastP; if (up !== goingUp) { goingUp = up; flier.classList.toggle('is-up', up); } }
+      const moving = Math.abs(p - lastP) > 0.0002; lastP = p;
+      flier.style.transform = `translateY(${y.toFixed(1)}px)`;
+      sprite.thrust = lerp(sprite.thrust, moving ? 1 : 0.25, 0.1);
+      const n = Math.floor(y / GAP);
+      if (n !== lastN) {
+        dots.forEach((d, i) => {
+          const s = i < n - 3 ? 1 : i <= n ? 2 : 0;
+          if (s !== d.state) { d.state = s; d.el.className = 'rail__dot' + (d.big ? ' big' : '') + (s === 1 ? ' on' : s === 2 ? ' hot' : ''); }
+        });
+        lastN = n;
+      }
+      let a = -1;
+      stationPos.forEach((sp, i) => { if (p >= sp - 0.002) a = i; });
+      if (a !== active) {
+        // Station erreicht: Lichtlinie über die Abschnittskante
+        if (a > active && a >= 0 && secs[a] && !reduce) { const s = secs[a]; s.classList.remove('ship-pass'); void s.offsetWidth; s.classList.add('ship-pass'); }
+        active = a;
+        stations.forEach((st, i) => {
+          st.classList.toggle('is-passed', i < a);
+          if (i === a) st.setAttribute('aria-current', 'location'); else st.removeAttribute('aria-current');
+        });
+      }
+    });
+    rail.addEventListener('click', e => e.stopPropagation());
+  }
+
+  /* =========================================================
+     Live vom Tisch: 20 Sekunden aus dem Stream (5:58:47 – 5:59:07)
+     ========================================================= */
+  /* Eingebetteter Clip als MP4 in der Datei: startet beim Hineinscrollen, Ton per Klick */
+  function initClip(box, clip) {
+    const soundBtn = $('.video__sound', box), replayBtn = $('.video__replay', box), bar = $('.video__bar i', box);
+    let inView = false, wantSound = true, soundOn = false, ended = false;
+    clip.muted = true; clip.playsInline = true;
+    const setSoundUI = on => {
+      soundOn = on;
+      soundBtn.setAttribute('aria-pressed', on);
+      soundBtn.querySelector('span').textContent = on ? 'Ton aus' : 'Ton an';
+      box.dataset.cursorLabel = on ? 'Ton aus' : 'Ton an';
+    };
+    const playNow = () => {
+      if (ended || clip.ended) { clip.currentTime = 0; ended = false; box.classList.remove('is-ended'); }
+      const activated = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+      clip.muted = !(wantSound && activated);
+      setSoundUI(!clip.muted);
+      clip.play().catch(() => { clip.muted = true; setSoundUI(false); clip.play().catch(() => {}); });
+    };
+    const soundOnNow = () => {
+      wantSound = true; clip.muted = false; setSoundUI(true);
+      if (clip.paused || ended) playNow();
+    };
+    clip.addEventListener('playing', () => { box.classList.add('is-playing'); box.classList.remove('is-ended'); });
+    clip.addEventListener('ended', () => { ended = true; box.classList.add('is-ended'); box.classList.remove('is-playing'); gsap.set(bar, { scaleX: 1 }); });
+    soundBtn.addEventListener('click', e => { e.stopPropagation(); if (soundOn) { wantSound = false; clip.muted = true; setSoundUI(false); } else soundOnNow(); });
+    replayBtn.addEventListener('click', e => { e.stopPropagation(); ended = true; wantSound = true; playNow(); });
+    box.addEventListener('click', () => { if (!soundOn) soundOnNow(); else if (ended) playNow(); });
+    const onActivation = () => { if (inView && wantSound && !soundOn && !ended && !clip.paused) { clip.muted = false; setSoundUI(true); } };
+    addEventListener('pointerdown', onActivation, true);
+    addEventListener('keydown', onActivation, true);
+    ScrollTrigger.create({
+      trigger: box, start: 'top 72%', end: 'bottom 28%',
+      onToggle: self => { inView = self.isActive; if (inView) playNow(); else clip.pause(); },
+    });
+    gsap.ticker.add(() => { if (inView && clip.duration && !ended) gsap.set(bar, { scaleX: clamp01(clip.currentTime / clip.duration) }); });
+    setSoundUI(false);
+  }
+
+  function initVideo() {
+    const box = $('.video');
+    if (!box) return;
+    const clip = $('.video__clip', box);
+    if (clip) return initClip(box, clip);     // eingebetteter Clip (läuft auch offline / per Doppelklick)
+    const ID = 'PAL4VwYA6dM', START = 21527, END = 21547, URL = `https://www.youtube.com/watch?v=${ID}&t=${START}s`;
+    const soundBtn = $('.video__sound', box), replayBtn = $('.video__replay', box), bar = $('.video__bar i', box);
+    let player = null, ready = false, inView = false, wantSound = true, soundOn = false, ended = false, failed = false, created = null;
+
+    // YouTube bettet nur auf echten Webseiten ein (http/https). Lokal geöffnet (Doppelklick, file://)
+    // würde YouTube eine Fehlerseite zeigen – dann gibt es stattdessen Vorschaubild + Link zum Clip.
+    if (!/^https?:$/.test(location.protocol)) {
+      box.classList.add('is-offline');
+      box.dataset.cursorLabel = 'Auf YouTube';
+      soundBtn.setAttribute('aria-pressed', 'false');
+      soundBtn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg><span>Clip auf YouTube ansehen</span>';
+      const hint = document.createElement('p');
+      hint.className = 'video__hint';
+      hint.innerHTML = 'Lokal geöffnet – für das eingebettete Video <b>start-seite.bat</b> (Windows) bzw. <b>start-seite.command</b> (Mac) starten.';
+      box.appendChild(hint);
+      const open = e => { e.stopPropagation(); window.open(URL, '_blank', 'noopener'); };
+      soundBtn.addEventListener('click', open);
+      box.addEventListener('click', open);
+      return;
+    }
+
+    const setSoundUI = on => {
+      soundOn = on;
+      soundBtn.setAttribute('aria-pressed', on);
+      soundBtn.querySelector('span').textContent = on ? 'Ton aus' : 'Ton an';
+      box.dataset.cursorLabel = on ? 'Ton aus' : 'Ton an';
+    };
+    const loadApi = () => new Promise(res => {
+      if (window.YT && window.YT.Player) return res();
+      const prev = window.onYouTubeIframeAPIReady;
+      window.onYouTubeIframeAPIReady = () => { prev && prev(); res(); };
+      const s = document.createElement('script'); s.src = 'https://www.youtube.com/iframe_api'; document.head.appendChild(s);
+    });
+    const create = () => created || (created = loadApi().then(() => new Promise(res => {
+      const vars = { start: START, end: END, autoplay: 0, controls: 0, disablekb: 1, fs: 0, rel: 0, modestbranding: 1, playsinline: 1, iv_load_policy: 3, cc_load_policy: 0, mute: 1 };
+      if (location.protocol.startsWith('http')) vars.origin = location.origin;
+      player = new YT.Player('yt', {
+        host: 'https://www.youtube-nocookie.com', videoId: ID, width: '100%', height: '100%', playerVars: vars,
+        events: {
+          onReady: () => { ready = true; res(); },
+          onStateChange: e => {
+            if (e.data === YT.PlayerState.PLAYING) {
+              box.classList.add('is-playing'); box.classList.remove('is-ended');
+              try { player.unloadModule('captions'); player.unloadModule('cc'); } catch (err) { /* Untertitel-Modul nicht geladen */ }
+            }
+            if (e.data === YT.PlayerState.ENDED) finish();
+          },
+          onError: () => { failed = true; box.classList.add('is-error'); soundBtn.querySelector('span').textContent = 'Auf YouTube ansehen'; res(); },
+        },
+      });
+    })));
+    const finish = () => {
+      ended = true; box.classList.add('is-ended'); box.classList.remove('is-playing');
+      gsap.set(bar, { scaleX: 1 });
+    };
+    const applySound = () => {
+      if (!ready || failed) return;
+      const activated = navigator.userActivation ? navigator.userActivation.hasBeenActive : false;
+      if (wantSound && activated) { player.unMute(); player.setVolume(85); setSoundUI(true); }
+      else { player.mute(); setSoundUI(false); }
+    };
+    const playNow = () => {
+      if (!ready || failed) return;
+      const t = player.getCurrentTime ? player.getCurrentTime() : 0;
+      if (ended || t >= END - 0.4 || t < START - 1) { player.seekTo(START, true); ended = false; box.classList.remove('is-ended'); }
+      applySound();
+      player.playVideo();
+      ensurePlaying();
+    };
+    // Der erste Startbefehl kann verloren gehen, wenn der Player intern noch lädt – daher kurz nachfassen.
+    // Blockiert der Browser den Ton, läuft das Video stumm weiter und der Ton-Knopf pulsiert.
+    let retry = null;
+    const ensurePlaying = () => {
+      clearTimeout(retry);
+      let tries = 0;
+      const check = () => {
+        if (!inView || ended || failed || !player.getPlayerState) return;
+        const s = player.getPlayerState();
+        if (s === YT.PlayerState.PLAYING || s === YT.PlayerState.BUFFERING) { if (player.isMuted()) setSoundUI(false); return; }
+        if (++tries > 1) { player.mute(); setSoundUI(false); }
+        player.playVideo();
+        if (tries < 10) retry = setTimeout(check, 900);
+      };
+      retry = setTimeout(check, 700);
+    };
+    const soundOnNow = () => {
+      if (failed) { window.open(URL, '_blank', 'noopener'); return; }
+      wantSound = true;
+      if (!ready) return;
+      player.unMute(); player.setVolume(85); setSoundUI(true);
+      if (ended || player.getPlayerState() !== YT.PlayerState.PLAYING) playNow();
+    };
+    soundBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      if (soundOn) { wantSound = false; player?.mute(); setSoundUI(false); } else soundOnNow();
+    });
+    replayBtn.addEventListener('click', e => { e.stopPropagation(); ended = true; wantSound = true; playNow(); });
+    box.addEventListener('click', () => { if (!soundOn) soundOnNow(); else if (ended) playNow(); });
+    // Erster Klick oder Tastendruck irgendwo auf der Seite, während der Clip läuft: Ton dazu
+    const onActivation = () => { if (inView && ready && wantSound && !soundOn && !ended) { player.unMute(); player.setVolume(85); setSoundUI(true); } };
+    addEventListener('pointerdown', onActivation, true);
+    addEventListener('keydown', onActivation, true);
+
+    ScrollTrigger.create({ trigger: box, start: 'top bottom+=900', once: true, onEnter: () => create() });
+    ScrollTrigger.create({
+      trigger: box, start: 'top 72%', end: 'bottom 28%',
+      onToggle: self => {
+        inView = self.isActive;
+        if (inView) create().then(() => { if (inView) playNow(); });
+        else if (ready && !failed) player.pauseVideo();
+      },
+    });
+    gsap.ticker.add(() => {
+      if (!ready || failed || !inView || ended || !player.getCurrentTime) return;
+      const t = player.getCurrentTime();
+      gsap.set(bar, { scaleX: clamp01((t - START) / (END - START)) });
+      if (t >= END - 0.05) { player.pauseVideo(); finish(); }
+    });
+    setSoundUI(false);
+  }
+
+  /* =========================================================
+     Finale: Kreuzer springt in den Hyperraum, der Button bleibt
+     ========================================================= */
+  function initFinale(api) {
+    const fin = $('#finale');
+    if (!fin) return;
+    const flash = $('.flash');
+    const jumped = () => {
+      fin.classList.add('is-jumped');
+      if (reduce) return;
+      gsap.fromTo(FIN, { warp: 1.2 }, { warp: 0, duration: 2.4, ease: 'power3.out' });
+      gsap.fromTo(flash, { opacity: 0.45 }, { opacity: 0, duration: 1, ease: 'power2.out' });
+    };
+    ScrollTrigger.create({
+      trigger: fin, start: 'top 30%',
+      onEnter: () => { if (api && !reduce) api.jump(jumped); else jumped(); },
+      onLeaveBack: () => { fin.classList.remove('is-jumped'); api?.unjump(); },
+    });
+  }
+
+  /* =========================================================
+     Snake Pairing als GSAP-Timeline
+     ========================================================= */
+  function initSnake() {
+    const snake = $('.snake');
+    if (!snake) return;
+    const stage = $('.snake__stage', snake), table = $('.snake__table', snake);
+    const text = $('.snake__text', snake), stepNo = $('.snake__stepno', snake);
+    const progress = $('.snake__progress', snake), pathEl = $('.snake__path path', snake);
+    const dieA = $('.die--a', snake), dieB = $('.die--b', snake);
+    const cards = Object.fromEntries($$('.pcard', snake).map(c => [c.dataset.card, c]));
+    const slots = Object.fromEntries($$('.slot', snake).map(s => [s.dataset.slot, s]));
+    const home = { a0: 'a-0', a1: 'a-1', a2: 'a-2', b0: 'b-0', b1: 'b-1', b2: 'b-2' };
+    const A = '<b class="ta">Team A</b>', B = '<b class="tb">Team B</b>';
+    const moves = [
+      ['a0', 'm0-a', 'att', 0], ['b0', 'm0-b', 'def', 0], ['b1', 'm1-b', 'att', 1],
+      ['a1', 'm1-a', 'def', 1], ['a2', 'm2-a', 'att', 2], ['b2', 'm2-b', 'def', 2],
+    ];
+    const target = Object.fromEntries(moves.map(m => [m[0], m[1]]));
+    const roleOf = Object.fromEntries(moves.map(m => [m[0], m[2]]));
+    const captions = [
+      `Die Team Captains würfeln um die Pairing-Initiative. ${A} gewinnt und entscheidet: ${A} stellt den ersten Angreifer.`,
+      `${A} stellt einen <b>Angreifer</b> für Match 1.`,
+      `${B} wählt einen <b>Verteidiger</b> für dieses Matchup …`,
+      `… und stellt anschließend einen eigenen <b>Angreifer</b> für Match 2.`,
+      `${A} wählt einen <b>Verteidiger</b> für Match 2 …`,
+      `… und stellt seinen letzten <b>Angreifer</b> für Match 3.`,
+      `${B} stellt den letzten <b>Verteidiger</b>.`,
+      `Alle drei Matchups stehen fest. Jeder <b>Angreifer</b> erhält in seinem Match die Initiative.`,
+    ];
+    const roleLabel = { att: 'Angreifer', def: 'Verteidiger' };
+    const bars = captions.map((_, i) => {
+      const li = document.createElement('li'), bar = document.createElement('i');
+      li.appendChild(bar); progress.appendChild(li);
+      li.addEventListener('click', e => { e.stopPropagation(); goTo(i); });
+      return bar;
+    });
+
+    const M = Object.fromEntries(Object.keys(cards).map(k => [k, { m: 0 }]));
+    const DICE = { p: 0 };
+    const MOVE = 1.15, DICE_T = 1.7;
+    const tl = gsap.timeline({ paused: true, repeat: -1, onUpdate: () => render() });
+    tl.addLabel('s0', 0).to(DICE, { p: 1, duration: DICE_T, ease: 'none' }, 's0').to({}, { duration: 2.2 });
+    moves.forEach(([c], i) => {
+      tl.addLabel('s' + (i + 1)).to(M[c], { m: 1, duration: MOVE, ease: 'power3.inOut' }).to({}, { duration: 2.4 });
+    });
+    tl.addLabel('s7').to({}, { duration: 4.8 });
+    tl.addLabel('reset')
+      .to(Object.values(M), { m: 0, duration: 0.9, ease: 'power2.inOut', stagger: 0.06 })
+      .set(DICE, { p: 0 })
+      .to({}, { duration: 0.5 });
+    const L = i => tl.labels['s' + i];
+    const stepEnd = i => L(i) + (i === 0 ? DICE_T : i < 7 ? MOVE : 0.4);
+
+    let pos = {};
+    const measure = () => {
+      const sr = stage.getBoundingClientRect(), tr = table.getBoundingClientRect();
+      pos = {};
+      for (const [k, s] of Object.entries(slots)) {
+        const r = s.getBoundingClientRect();
+        pos[k] = { x: r.left - sr.left, y: r.top - sr.top, w: r.width, h: r.height };
+      }
+      pathEl.ownerSVGElement.setAttribute('viewBox', `0 0 ${tr.width} ${tr.height}`);
+      pos._tableOff = { x: tr.left - sr.left, y: tr.top - sr.top };
+    };
+
+    let step = -1;
+    const render = () => {
+      if (!pos['a-0']) measure();
+      const time = tl.time();
+      let s = 0;
+      for (let i = 0; i <= 7; i++) if (time >= L(i) - 1e-4) s = i;
+      const resetting = time >= tl.labels.reset;
+      for (const [c, el] of Object.entries(cards)) {
+        const m = M[c].m, a = pos[home[c]], b = pos[target[c]];
+        const lift = Math.sin(Math.PI * m);
+        gsap.set(el, {
+          x: lerp(a.x, b.x, m), y: lerp(a.y, b.y, m) - lift * 30,
+          scale: 1 + lift * 0.08, rotation: lift * (c[0] === 'a' ? -4 : 4),
+        });
+        el.classList.toggle('is-moving', m > 0.02 && m < 0.98);
+        const placed = m > 0.6;
+        el.classList.toggle('is-att', placed && roleOf[c] === 'att');
+        el.classList.toggle('is-def', placed && roleOf[c] === 'def');
+        el.classList.toggle('is-init', s === 7 && !resetting && roleOf[c] === 'att');
+        $('.pcard__role', el).textContent = placed ? roleLabel[roleOf[c]] : '';
+      }
+      [0, 1, 2].forEach(mi => {
+        const inMatch = moves.filter(x => x[3] === mi).map(x => M[x[0]].m);
+        const el = $(`.match[data-match="${mi}"]`, snake);
+        el.classList.toggle('is-set', inMatch.every(v => v > 0.95));
+        el.classList.toggle('is-active', inMatch.some(v => v > 0.02) && !inMatch.every(v => v > 0.95));
+      });
+      const pts = [];
+      for (const [c] of moves) {
+        const m = M[c].m;
+        if (m <= 0.01) break;
+        const a = pos[home[c]], b = pos[target[c]], off = pos._tableOff;
+        pts.push([lerp(a.x, b.x, m) + b.w / 2 - off.x, lerp(a.y, b.y, m) + b.h / 2 - off.y]);
+      }
+      pathEl.setAttribute('d', pts.length > 1 ? 'M' + pts.map(p => p.map(v => v.toFixed(1)).join(',')).join(' L') : '');
+      pathEl.style.opacity = s === 7 ? 0.25 : '';
+      const p = DICE.p, rolling = p > 0 && p < 0.8;
+      if (rolling) { dieA.firstElementChild.textContent = 1 + (Math.random() * 6 | 0); dieB.firstElementChild.textContent = 1 + (Math.random() * 6 | 0); }
+      else if (p >= 0.8) { dieA.firstElementChild.textContent = '5'; dieB.firstElementChild.textContent = '2'; }
+      else { dieA.firstElementChild.textContent = '–'; dieB.firstElementChild.textContent = '–'; }
+      dieA.className = 'die die--a' + (rolling ? ' is-rolling' : p >= 0.8 ? ' is-win' : '');
+      dieB.className = 'die die--b' + (rolling ? ' is-rolling' : p >= 0.8 ? ' is-lose' : '');
+      if (s !== step) {
+        step = s;
+        snake.dataset.step = s;
+        gsap.timeline()
+          .to(text, { autoAlpha: 0, y: 8, duration: 0.22, ease: 'power2.in' })
+          .call(() => { text.innerHTML = captions[s]; stepNo.textContent = String(s).padStart(2, '0'); })
+          .to(text, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'expo.out' });
+      }
+      const next = s < 7 ? L(s + 1) : tl.duration();
+      bars.forEach((bar, i) => gsap.set(bar, { scaleX: i < s ? 1 : i === s ? clamp01((time - L(s)) / (next - L(s))) : 0 }));
+    };
+
+    let userPaused = false, inView = false;
+    const setPausedUI = () => {
+      snake.classList.toggle('is-paused', userPaused);
+      $('[data-act="play"]', snake).setAttribute('aria-label', userPaused ? 'Abspielen' : 'Pause');
+      if (userPaused || !inView) tl.pause(); else tl.play();
+    };
+    const goTo = i => {
+      userPaused = true; setPausedUI();
+      if (i > 7) { tl.tweenTo(tl.duration() - 0.001, { duration: 1, onComplete: () => tl.time(0) }); return; }
+      i = Math.max(0, i);
+      tl.tweenTo(stepEnd(i), { duration: Math.min(1.2, Math.max(0.5, Math.abs(tl.time() - stepEnd(i)) * 0.4)), ease: 'power2.inOut' });
+    };
+    const current = () => {
+      const t = tl.time();
+      for (let i = 7; i >= 0; i--) if (t >= stepEnd(i) - 0.05) return i;
+      return -1;
+    };
+    $('[data-act="next"]', snake).addEventListener('click', () => goTo(current() + 1));
+    $('[data-act="prev"]', snake).addEventListener('click', () => goTo(current() - 1));
+    $('[data-act="play"]', snake).addEventListener('click', () => { userPaused = !userPaused; setPausedUI(); });
+    stage.dataset.cursorLabel = 'Weiter';
+    stage.addEventListener('click', () => goTo(current() + 1));
+    addEventListener('keydown', e => {
+      if (!inView) return;
+      if (e.key === 'ArrowRight') goTo(current() + 1);
+      if (e.key === 'ArrowLeft') goTo(current() - 1);
+    });
+    ScrollTrigger.create({
+      trigger: snake, start: 'top 75%', end: 'bottom 20%',
+      onToggle: self => { inView = self.isActive; setPausedUI(); },
+    });
+    ScrollTrigger.addEventListener('refresh', () => { measure(); render(); });
+    if (reduce) { userPaused = true; tl.time(stepEnd(7)); }
+    measure(); render();
+  }
+})();
+
+</script>
+<script type="module">
+/* Realistischer Kreuzer (Three.js).
+   Intro: Er kommt aus dem Hyperraum wie im Filmvorspann ins Bild, schrumpft dann und wird zum Mauszeiger –
+   die Nase ist die Zeigerspitze und dreht sich mit der Bewegung. Am Ende der Seite kehrt das Zielvisier
+   zurück und der Kreuzer springt in den Hyperraum. */
+import * as THREE from 'three';
+
+const gsap = window.gsap, ScrollTrigger = window.ScrollTrigger;
+const $ = s => document.querySelector(s);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const D2R = Math.PI / 180;
+const clamp01 = n => Math.max(0, Math.min(1, n));
+const lerp = (a, b, t) => a + (b - a) * t;
+const smooth = t => t * t * (3 - 2 * t);
+
+function boot() {
+  const canvas = $('.cruiser');
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setPixelRatio(Math.min(devicePixelRatio || 1, 1.5));
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.1;
+  renderer.setClearColor(0x000000, 0);
+
+  const scene = new THREE.Scene();
+  const FOV = 30, CAMZ = 40;
+  const camera = new THREE.PerspectiveCamera(FOV, 1, 0.02, 5000);
+  camera.position.set(0, 0, CAMZ);
+
+  let VW = 1, VH = 1, focal = 1, mobile = false;
+  const resize = () => {
+    VW = document.documentElement.clientWidth; VH = innerHeight;
+    mobile = VW < 720;
+    renderer.setSize(VW, VH, false);
+    canvas.style.width = VW + 'px'; canvas.style.height = VH + 'px';
+    camera.aspect = VW / VH; camera.updateProjectionMatrix();
+    focal = (VH / 2) / Math.tan(FOV / 2 * D2R);
+  };
+  resize(); addEventListener('resize', resize);
+
+  /* ---------- Licht ---------- */
+  scene.add(new THREE.HemisphereLight(0xaab9d2, 0x0b0c10, 0.9));
+  const key = new THREE.DirectionalLight(0xfff1e0, 3.4); key.position.set(-6, 9, 8); scene.add(key);
+  const rim = new THREE.DirectionalLight(0x9cc8ff, 1.1); rim.position.set(5, 3, -10); scene.add(rim);
+  const fill = new THREE.DirectionalLight(0x8ea4c6, 1.4); fill.position.set(3, -7, 5); scene.add(fill);
+
+  /* ---------- Texturen (prozedural: Panzerplatten, Fensterlichter) ---------- */
+  let seed = 7;
+  const rnd = () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const mkCanvas = s => { const c = document.createElement('canvas'); c.width = c.height = s; return c; };
+  const S = 1024;
+  const plate = mkCanvas(S), glow = mkCanvas(S);
+  {
+    const g = plate.getContext('2d'), e = glow.getContext('2d');
+    g.fillStyle = '#b8b6b0'; g.fillRect(0, 0, S, S);
+    e.fillStyle = '#000'; e.fillRect(0, 0, S, S);
+    for (let i = 0; i < 340; i++) {
+      const w = 14 + rnd() * 140, h = 8 + rnd() * 70, x = rnd() * S, y = rnd() * S, v = 150 + rnd() * 60 | 0;
+      g.fillStyle = `rgb(${v},${v - 2},${v - 7})`; g.fillRect(x, y, w, h);
+      g.strokeStyle = 'rgba(36,38,44,.38)'; g.lineWidth = 1; g.strokeRect(x + 0.5, y + 0.5, w, h);
+    }
+    g.strokeStyle = 'rgba(30,32,38,.22)';
+    for (let x = 0; x < S; x += 64) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x, S); g.stroke(); }
+    for (let y = 0; y < S; y += 48) { g.beginPath(); g.moveTo(0, y); g.lineTo(S, y); g.stroke(); }
+    for (let i = 0; i < 1400; i++) {
+      g.fillStyle = `rgba(18,20,26,${0.18 + rnd() * 0.45})`;
+      g.fillRect(rnd() * S, rnd() * S, 2 + rnd() * 9, 1 + rnd() * 4);
+    }
+    // Fensterreihen (leuchten später über emissiveMap)
+    for (let i = 0; i < 70; i++) {
+      const x = rnd() * S, y = rnd() * S, n = 3 + (rnd() * 14 | 0);
+      for (let k = 0; k < n; k++) {
+        if (rnd() < 0.25) continue;
+        const c = rnd() < 0.85 ? '#ffe3b8' : '#bfe0ff';
+        e.fillStyle = c; e.fillRect(x + k * 4, y, 2, 2);
+        g.fillStyle = '#2a2c31'; g.fillRect(x + k * 4, y, 2, 2);
+      }
+    }
+  }
+  const tex = c => { const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); return t; };
+  const plateTex = tex(plate), glowTex = tex(glow);
+  const radial = (() => {
+    const c = mkCanvas(128), g = c.getContext('2d');
+    const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = gr; g.fillRect(0, 0, 128, 128);
+    const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+  })();
+
+  /* ---------- Materialien ---------- */
+  const hullMat = new THREE.MeshStandardMaterial({
+    color: 0xd9d6cf, map: plateTex, roughness: 0.66, metalness: 0.32, flatShading: true,
+    emissive: 0xffffff, emissiveMap: glowTex, emissiveIntensity: 1.2,
+  });
+  const darkMat = new THREE.MeshStandardMaterial({ color: 0x3a3d45, map: plateTex, roughness: 0.8, metalness: 0.4, flatShading: true });
+  const metalMat = new THREE.MeshStandardMaterial({ color: 0x5b606a, roughness: 0.45, metalness: 0.8 });
+  const greebleMat = new THREE.MeshStandardMaterial({ color: 0xb9b6af, roughness: 0.75, metalness: 0.3, flatShading: true });
+  const engineCore = new THREE.MeshBasicMaterial({ color: 0x8fc4ff, toneMapped: false });
+  const bridgeLights = new THREE.MeshBasicMaterial({ color: 0xffe6bf, toneMapped: false });
+
+  /* ---------- Geometrie ---------- */
+  // Flächen aus Punkten; Normalen zeigen automatisch nach außen, UVs per Dreiseiten-Projektion
+  function polyGeo(faces, center) {
+    const pos = [], uv = [];
+    const c = new THREE.Vector3(...center);
+    const A = new THREE.Vector3(), B = new THREE.Vector3(), C = new THREE.Vector3(), n = new THREE.Vector3(), m = new THREE.Vector3();
+    const tri = (a, b, cc) => {
+      A.set(...a); B.set(...b); C.set(...cc);
+      n.subVectors(B, A).cross(m.subVectors(C, A));
+      const centroid = new THREE.Vector3().add(A).add(B).add(C).multiplyScalar(1 / 3);
+      if (n.dot(centroid.sub(c)) < 0) { const t = B.clone(); B.copy(C); C.copy(t); }
+      const ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
+      for (const P of [A, B, C]) {
+        pos.push(P.x, P.y, P.z);
+        if (ay >= ax && ay >= az) uv.push(P.x * 0.45, P.z * 0.45);
+        else if (ax >= az) uv.push(P.z * 0.45, P.y * 0.45);
+        else uv.push(P.x * 0.45, P.y * 0.45);
+      }
+    };
+    for (const f of faces) for (let i = 1; i < f.length - 1; i++) tri(f[0], f[i], f[i + 1]);
+    const geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+    geo.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+    geo.computeVertexNormals();
+    return geo;
+  }
+
+  // Oberer Rumpf, Graben an der Seite, unterer Rumpf, Heck
+  const Z0 = -1.3, NZ = 1.75;
+  const N = [0, 0.02, NZ], Lu = [-1, 0.02, Z0], Ru = [1, 0.02, Z0], Tu = [0, 0.34, Z0];
+  const Ni = [0, -0.02, NZ - 0.1], Li = [-0.92, -0.02, Z0], Ri = [0.92, -0.02, Z0];
+  const Nl = [0, -0.05, NZ - 0.06], Ll = [-0.96, -0.05, Z0], Rl = [0.96, -0.05, Z0], Bl = [0, -0.3, Z0];
+  const upper = polyGeo([[N, Tu, Lu], [N, Ru, Tu]], [0, -0.2, -0.2]);
+  const trench = polyGeo([[N, Lu, Li, Ni], [Ni, Li, Ll, Nl], [N, Ni, Ri, Ru], [Ni, Nl, Rl, Ri]], [0, 0, -0.2]);
+  const lower = polyGeo([[Nl, Ll, Bl], [Nl, Bl, Rl]], [0, 0.2, -0.2]);
+  const rearPts = [Lu, Tu, Ru, Ri, Rl, Bl, Ll, Li];
+  const rear = polyGeo(rearPts.map((p, i) => [[0, 0, Z0], p, rearPts[(i + 1) % rearPts.length]]), [0, 0, 0]);
+
+  // Dreiseiten-Projektion: Plattenmuster ohne Verzerrung auf allen Flächen
+  function triplanar(geo) {
+    const g = geo.index ? geo.toNonIndexed() : geo;
+    g.computeVertexNormals();
+    const p = g.attributes.position, n = g.attributes.normal, uv = new Float32Array(p.count * 2);
+    for (let i = 0; i < p.count; i += 3) {
+      const nx = Math.abs(n.getX(i)), ny = Math.abs(n.getY(i)), nz = Math.abs(n.getZ(i));
+      for (let k = i; k < i + 3; k++) {
+        const x = p.getX(k), y = p.getY(k), z = p.getZ(k);
+        if (ny >= nx && ny >= nz) { uv[k * 2] = x * 0.45; uv[k * 2 + 1] = z * 0.45; }
+        else if (nx >= nz) { uv[k * 2] = z * 0.45; uv[k * 2 + 1] = y * 0.45; }
+        else { uv[k * 2] = x * 0.45; uv[k * 2 + 1] = y * 0.45; }
+      }
+    }
+    g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    return g;
+  }
+
+  // Stufenaufbau (Trapeze in der Draufsicht, nach oben extrudiert, mit Fase)
+  function tier(y0, h, zf, hwf, zr, hwr) {
+    const s = new THREE.Shape();
+    s.moveTo(-hwr, -zr); s.lineTo(hwr, -zr); s.lineTo(hwf, -zf); s.lineTo(-hwf, -zf); s.closePath();
+    const g = new THREE.ExtrudeGeometry(s, { depth: h, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.012, bevelSegments: 1 });
+    g.rotateX(-Math.PI / 2); g.translate(0, y0, 0);
+    return triplanar(g);
+  }
+
+  function buildModel(ghostMat) {
+    const grp = new THREE.Group();
+    const add = (geo, mat, x = 0, y = 0, z = 0) => { const m = new THREE.Mesh(geo, ghostMat || mat); m.position.set(x, y, z); grp.add(m); return m; };
+    add(upper, hullMat); add(trench, darkMat); add(lower, hullMat); add(rear, darkMat);
+    [[0.05, 0.3, -0.05, 0.15, -1.28, 0.6], [0.3, 0.14, -0.42, 0.12, -1.26, 0.42], [0.42, 0.12, -0.72, 0.09, -1.22, 0.29], [0.52, 0.1, -0.92, 0.07, -1.18, 0.19]]
+      .forEach(t => add(tier(...t), hullMat));
+    add(triplanar(new THREE.BoxGeometry(0.13, 0.3, 0.16)), hullMat, 0, 0.76, -1.08);            // Turm
+    add(triplanar(new THREE.BoxGeometry(0.68, 0.075, 0.13)), hullMat, 0, 0.93, -1.1);           // Brücke
+    add(new THREE.CylinderGeometry(0.018, 0.018, 0.06, 8), metalMat, -0.24, 0.98, -1.1);
+    add(new THREE.CylinderGeometry(0.018, 0.018, 0.06, 8), metalMat, 0.24, 0.98, -1.1);
+    add(new THREE.SphereGeometry(0.055, 20, 14), hullMat, -0.24, 1.03, -1.1);         // Kuppeln
+    add(new THREE.SphereGeometry(0.055, 20, 14), hullMat, 0.24, 1.03, -1.1);
+    if (!ghostMat) {
+      add(new THREE.BoxGeometry(0.52, 0.012, 0.004), bridgeLights, 0, 0.935, -1.032);  // Brückenfenster
+    }
+    // Triebwerke
+    const engines = [];
+    [[0, 0.12, 0.17], [-0.38, 0.1, 0.12], [0.38, 0.1, 0.12], [-0.66, 0.05, 0.065], [0.66, 0.05, 0.065]].forEach(([x, y, r]) => {
+      const noz = add(new THREE.CylinderGeometry(r, r * 1.12, 0.2, 28, 1, true), metalMat, x, y, Z0 - 0.08);
+      noz.rotation.x = Math.PI / 2;
+      if (!ghostMat) {
+        const core = add(new THREE.CircleGeometry(r * 0.72, 28), engineCore, x, y, Z0 - 0.16);
+        core.rotation.y = Math.PI;
+        engines.push({ x, y, r });
+      }
+    });
+    return { grp, engines };
+  }
+
+  const ship = new THREE.Group(); scene.add(ship);
+  const hull = buildModel();
+  const model = hull.grp; ship.add(model);
+  // Oberflächendetails (Greebles) auf dem oberen Rumpf
+  {
+    const count = 260, inst = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), greebleMat, count);
+    const tris = [[N, Tu, Lu], [N, Ru, Tu]].map(t => t.map(p => new THREE.Vector3(...p)));
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), SC = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
+    const col = new THREE.Color();
+    for (let i = 0; i < count; i++) {
+      const [a, b, c] = tris[i % 2];
+      let u = rnd(), v = rnd(); if (u + v > 1) { u = 1 - u; v = 1 - v; }
+      P.copy(a).addScaledVector(new THREE.Vector3().subVectors(b, a), u).addScaledVector(new THREE.Vector3().subVectors(c, a), v);
+      const n = new THREE.Vector3().subVectors(b, a).cross(new THREE.Vector3().subVectors(c, a)).normalize();
+      if (n.y < 0) n.negate();
+      Q.setFromUnitVectors(up, n);
+      const h = 0.004 + rnd() * 0.014;
+      SC.set(0.01 + rnd() * 0.05, h, 0.01 + rnd() * 0.03);
+      P.addScaledVector(n, h / 2);
+      M.compose(P, Q, SC); inst.setMatrixAt(i, M);
+      const v2 = 0.45 + rnd() * 0.45; col.setRGB(v2, v2, v2 * 0.98); inst.setColorAt(i, col);
+    }
+    model.add(inst);
+    model.userData.greebles = inst;
+  }
+  // Leuchten der Triebwerke
+  const glows = hull.engines.map(({ x, y, r }) => {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: radial, color: 0x6fb6ff, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }));
+    sp.position.set(x, y, Z0 - 0.22); sp.userData.r = r; model.add(sp);
+    return sp;
+  });
+  // Positionslichter
+  const beacon = new THREE.Sprite(new THREE.SpriteMaterial({ map: radial, color: 0xff5a4a, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }));
+  beacon.position.set(0, 1.1, -1.1); beacon.scale.setScalar(0.12); model.add(beacon);
+  const noseLight = new THREE.Sprite(new THREE.SpriteMaterial({ map: radial, color: 0xffffff, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, toneMapped: false }));
+  noseLight.position.set(0, 0.03, NZ + 0.02); noseLight.scale.setScalar(0.08); model.add(noseLight);
+
+  // Hyperraum-Geist (helle Silhouette, wird gestreckt)
+  const ghostMat = new THREE.MeshBasicMaterial({ color: 0xcfe3ff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false });
+  const ghost = buildModel(ghostMat).grp; ship.add(ghost);
+  // Lichtblitz
+  const flash = new THREE.Sprite(new THREE.SpriteMaterial({ map: radial, color: 0xcfe3ff, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, opacity: 0, toneMapped: false }));
+  scene.add(flash);
+
+  const MODEL_LEN = NZ - Z0 + 0.2; // ≈ 3.25
+
+  /* =========================================================
+     Steuerung: Intro → der Kreuzer wird zum Cursor → am Ende Hyperraumsprung
+     ========================================================= */
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const body = document.body;
+
+  // Maus (Cursor-Modus) bzw. letzter Tipp (Touch)
+  const PTR = { x: 0, y: 0, known: false, hover: false };
+  const fallbackPtr = () => ({ x: VW * (mobile ? 0.74 : 0.74), y: VH * (mobile ? 0.2 : 0.3) });
+  addEventListener('pointermove', e => { if (e.pointerType !== 'mouse') return; PTR.x = e.clientX; PTR.y = e.clientY; PTR.known = true; }, { passive: true });
+  addEventListener('pointerdown', e => { if (e.pointerType === 'mouse') return; PTR.x = e.clientX; PTR.y = e.clientY; PTR.known = true; }, { passive: true });
+  document.addEventListener('mouseover', e => {
+    PTR.hover = !!e.target.closest('a, button, summary, input, textarea, [data-cursor], [data-cursor-label]');
+  });
+
+  const O = { x: 0, y: 0, len: 100, yaw: 0, elev: 0, roll: 0 };            // feste Pose (Intro, Sprung)
+  const J = { stretch: 0, anchor: 1, thrust: 0, flash: 0, visible: 0 };    // Effekte
+  const A = { k: 0 };                                                        // Übergang Pose → Cursor
+  const R = { x: 0, y: 0, len: 66, vx: 0, vy: 0, vl: 0 };                  // Cursor-Kreuzer (Feder)
+  let mode = 'hidden';            // hidden | intro | attach | cursor | jump
+  let wantJump = false, jumpTl = null, onJumpCb = null;
+
+  const CUR_ELEV = 58;            // Blick schräg von oben: Richtung gut lesbar, Form bleibt 3D
+  const cursorLen = () => (finePointer ? (PTR.hover ? 84 : 66) : (mobile ? 92 : 110));
+  let heading = 0, bank = 0, pvx = 0, pvy = 0, prevX = null, prevY = null, speed = 0;
+
+  // Rechnet jedes Bild die Cursor-Pose: Nase = Zeigerspitze, dreht in Bewegungsrichtung, legt sich in Kurven
+  function updateCursor(dt, t) {
+    const p = PTR.known ? PTR : fallbackPtr();
+    if (prevX == null) { prevX = p.x; prevY = p.y; }
+    let dYaw = 0;
+    if (finePointer) {
+      const ivx = (p.x - prevX) / dt, ivy = (p.y - prevY) / dt;
+      pvx = lerp(pvx, ivx, 0.22); pvy = lerp(pvy, ivy, 0.22);
+    } else {
+      pvx = lerp(pvx, R.vx, 0.2); pvy = lerp(pvy, R.vy, 0.2);
+    }
+    prevX = p.x; prevY = p.y;
+    speed = Math.hypot(pvx, pvy);
+    if (speed > 35) {
+      const target = Math.atan2(pvx, -pvy) / D2R;
+      const diff = ((target - heading) % 360 + 540) % 360 - 180;
+      dYaw = diff * (1 - Math.exp(-dt * (finePointer ? 9 : 4)));
+      heading += dYaw;
+    }
+    bank = lerp(bank, Math.max(-42, Math.min(42, -(dYaw / Math.max(dt, 1e-3)) * 0.1)), 0.12);
+    // ohne Maus: ruhige Schleife um den Zielpunkt, damit er nie stillsteht
+    let ox = 0, oy = 0;
+    if ((!finePointer || !PTR.known) && !reduce) { const w = (2 * Math.PI) / 9; ox = 28 * Math.sin(w * t); oy = 14 * Math.sin(2 * w * t); }
+    const len = cursorLen();
+    const fx = Math.sin(heading * D2R), fy = -Math.cos(heading * D2R);
+    const nose = finePointer && PTR.known ? 0.44 : 0;          // bei Maus sitzt die Nase genau auf der Zeigerspitze
+    const tx = p.x + ox - fx * len * nose, ty = p.y + oy - fy * len * nose;
+    const k = finePointer ? 190 : 8, c = 2 * Math.sqrt(k) * 0.9;
+    const steps = dt > 0.017 ? 3 : 1, h = dt / steps;
+    for (let i = 0; i < steps; i++) {
+      R.vx += (k * (tx - R.x) - c * R.vx) * h; R.vy += (k * (ty - R.y) - c * R.vy) * h; R.vl += (k * (len - R.len) - c * R.vl) * h;
+      R.x += R.vx * h; R.y += R.vy * h; R.len += R.vl * h;
+    }
+  }
+  const snapCursor = () => {
+    const p = PTR.known ? PTR : fallbackPtr(), len = cursorLen();
+    const fx = Math.sin(heading * D2R), fy = -Math.cos(heading * D2R), nose = finePointer && PTR.known ? 0.44 : 0;
+    Object.assign(R, { x: p.x - fx * len * nose, y: p.y - fy * len * nose, len, vx: 0, vy: 0, vl: 0 });
+    prevX = null;
+  };
+
+  const qCur = new THREE.Quaternion(), qA = new THREE.Quaternion(), qB = new THREE.Quaternion(), qE = new THREE.Quaternion(), qY = new THREE.Quaternion();
+  const AX = { x: new THREE.Vector3(1, 0, 0), y: new THREE.Vector3(0, 1, 0), z: new THREE.Vector3(0, 0, 1) };
+  // yaw 0 = Heck zur Kamera (bei Draufsicht: Nase nach oben), yaw 90 = Nase nach rechts; elev > 0 = von oben
+  const poseQ = (out, yaw, elev, roll) => out.setFromAxisAngle(AX.z, roll * D2R)
+    .multiply(qE.setFromAxisAngle(AX.x, elev * D2R))
+    .multiply(qY.setFromAxisAngle(AX.y, (180 - yaw) * D2R));
+  const cursorQ = (out, t) => {
+    poseQ(out, heading, CUR_ELEV + Math.sin(t * 1.4) * 3, 0);
+    return out.multiply(qB.setFromAxisAngle(AX.z, bank * D2R));   // Querneigung um die eigene Längsachse
+  };
+  const wPos = new THREE.Vector3();
+  const toWorld = (x, y, len, out) => {
+    const dist = MODEL_LEN * focal / Math.max(4, len);
+    return out.set((x - VW / 2) / focal * dist, -(y - VH / 2) / focal * dist, CAMZ - dist);
+  };
+
+  let hiddenDrawn = false;
+  const tick = () => {
+    const t = gsap.ticker.time, dt = Math.min(0.05, gsap.ticker.deltaRatio(60) / 60) || 1 / 60;
+    if (mode === 'hidden') {
+      if (!hiddenDrawn) { ship.visible = false; flash.visible = false; renderer.render(scene, camera); hiddenDrawn = true; }
+      return;
+    }
+    hiddenDrawn = false;
+
+    let X, Y, LEN, thrustMove = 0;
+    if (mode === 'cursor' || mode === 'attach') {
+      updateCursor(dt, t);
+      cursorQ(qA, t);
+      thrustMove = clamp01(speed / 900);
+      if (mode === 'attach') {
+        const k = A.k;
+        X = lerp(O.x, R.x, k); Y = lerp(O.y, R.y, k); LEN = lerp(O.len, R.len, k);
+        poseQ(qB, O.yaw, O.elev, O.roll); qB.slerp(qA, k); qCur.copy(qB);
+      } else {
+        X = R.x; Y = R.y; LEN = R.len;
+        qCur.slerp(qA, reduce ? 1 : 1 - Math.exp(-dt * 20));
+      }
+    } else {                                   // intro | jump: feste Pose
+      X = O.x; Y = O.y; LEN = O.len;
+      poseQ(qA, O.yaw, O.elev, O.roll);
+      qCur.slerp(qA, 1 - Math.exp(-dt * 16));
+      if (mode === 'intro' && t < 0.2) qCur.copy(qA);
+    }
+    toWorld(X, Y, LEN, wPos);
+
+    // Hyperraum-Streckung (Nase oder Heck bleibt fest)
+    const st = J.stretch, sz = 1 + 42 * st * st;
+    const anchorZ = J.anchor ? NZ : Z0;
+    model.scale.set(1 - 0.3 * st, 1 - 0.3 * st, sz);
+    model.position.z = -anchorZ * (sz - 1);
+    ghost.scale.copy(model.scale); ghost.position.copy(model.position);
+    ghostMat.opacity = Math.min(1, st * 3) * 0.5;
+    model.userData.greebles.visible = st < 0.02;
+    ship.position.copy(wPos);
+    ship.quaternion.copy(qCur);
+    ship.visible = J.visible > 0.01;
+
+    // Triebwerke, Positionslichter, Blitz
+    const thrust = 0.45 + thrustMove * 0.8 + J.thrust;
+    glows.forEach((g, i) => { const s = g.userData.r * (2.4 + 1.5 * thrust + Math.sin(t * 30 + i) * 0.12); g.scale.set(s, s, s); g.material.opacity = 0.4 + 0.3 * clamp01(thrust); });
+    beacon.material.opacity = (Math.sin(t * 3.2) > 0.6) ? 1 : 0.08;
+    noseLight.material.opacity = 0.5 + 0.5 * Math.sin(t * 1.3);
+    flash.visible = J.flash > 0.01;
+    if (flash.visible) {
+      flash.position.copy(wPos);
+      const d = CAMZ - wPos.z;
+      flash.scale.setScalar(d * (0.08 + 0.9 * J.flash));
+      flash.material.opacity = J.flash;
+    }
+    renderer.render(scene, camera);
+  };
+  gsap.ticker.add(tick);
+
+  /* ---------- Übergänge ---------- */
+  const cursorShip = on => body.classList.toggle('cursor-ship', on && finePointer);
+
+  // Kreuzer schrumpft und dockt an den Zeiger an
+  function attach(dur = 1.5) {
+    if (reduce) { mode = 'hidden'; return; }
+    snapCursor();
+    heading = O.yaw;                        // er behält beim Andocken seine Blickrichtung
+    A.k = 0; mode = 'attach'; J.visible = 1;
+    cursorShip(true);
+    gsap.to(A, {
+      k: 1, duration: dur, ease: 'power3.inOut', overwrite: true,
+      onComplete: () => {
+        mode = 'cursor';
+        gsap.fromTo(J, { flash: 0.35 }, { flash: 0, duration: 0.5, ease: 'power2.out' });
+        if (wantJump) startJump();
+      },
+    });
+    gsap.fromTo(J, { thrust: 0.9 }, { thrust: 0, duration: dur, ease: 'power2.out' });
+  }
+
+  const finale = () => {
+    const el = $('#finale'), r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + Math.min(r.height, VH) * 0.3, len: VW * (mobile ? 0.55 : 0.2) };
+  };
+  function startJump() {
+    if (mode === 'hidden' || mode === 'intro' || mode === 'jump') return;
+    if (jumpTl) jumpTl.kill();
+    gsap.killTweensOf(A);
+    // aktuelle Pose übernehmen, Nase auf den nächsten „Heck zur Kamera"-Winkel drehen
+    const fromCursor = mode === 'cursor' || mode === 'attach';
+    Object.assign(O, fromCursor
+      ? { x: mode === 'attach' ? lerp(O.x, R.x, A.k) : R.x, y: mode === 'attach' ? lerp(O.y, R.y, A.k) : R.y, len: mode === 'attach' ? lerp(O.len, R.len, A.k) : R.len, yaw: heading, elev: CUR_ELEV, roll: 0 }
+      : {});
+    const yaw0 = Math.round(O.yaw / 360) * 360;
+    mode = 'jump';
+    cursorShip(false);                      // das Zielvisier kommt zurück
+    jumpTl = gsap.timeline({
+      onReverseComplete: () => { J.anchor = 1; if (!wantJump) { Object.assign(O, { yaw: yaw0 }); attach(1.3); } },
+    })
+      .to(O, { x: () => finale().x, y: () => finale().y, len: () => finale().len, yaw: yaw0, elev: 12, duration: 1.6, ease: 'power2.inOut' }, 0)
+      .to(O, { keyframes: [{ roll: 16, duration: 0.8, ease: 'sine.out' }, { roll: 0, duration: 0.8, ease: 'sine.inOut' }] }, 0)
+      .to(J, { thrust: 1.6, duration: 0.5, ease: 'power2.in' }, 1.5)
+      .set(J, { anchor: 0 }, 1.85)
+      .to(O, { len: () => finale().len * 0.55, y: () => finale().y - VH * 0.06, duration: 0.7, ease: 'power3.in' }, 1.85)
+      .to(J, { stretch: 1, duration: 0.55, ease: 'power4.in' }, 1.95)
+      .call(() => { if (onJumpCb && jumpTl && !jumpTl.reversed()) onJumpCb(); }, null, 2.4)
+      .fromTo(J, { flash: 0 }, { flash: 1, duration: 0.08, ease: 'none', immediateRender: false }, 2.45)
+      .set(J, { visible: 0 }, 2.53)
+      .to(J, { flash: 0, duration: 0.9, ease: 'power2.out' }, 2.53);
+  }
+
+  /* Aufwärmen: Shader und Texturen einmal hochladen, damit der erste sichtbare Frame nicht hängt */
+  ship.visible = true; flash.visible = true;
+  renderer.compile(scene, camera); renderer.render(scene, camera);
+  ship.visible = false; flash.visible = false;
+
+  /* =========================================================
+     API für main.js
+     ========================================================= */
+  const api = {
+    /* Intro: aus dem Hyperraum, wie im Filmvorspann über die Kamera ins Bild – dann wird er zum Cursor */
+    intro(tl) {
+      mode = 'intro'; J.visible = 0;
+      const big = mobile ? 2.3 : 1.45;
+      Object.assign(O, { x: VW * 0.5, y: -VW * big * 0.2, len: VW * big, yaw: 0, elev: -34, roll: 0 });
+      Object.assign(J, { stretch: 1, anchor: 1, thrust: 0.6, flash: 0 });
+      tl.set(J, { visible: 1 }, 'arrive')
+        .to(J, { stretch: 0, duration: 0.9, ease: 'expo.out' }, 'arrive')
+        .fromTo(J, { flash: 1 }, { flash: 0, duration: 0.8, ease: 'power2.out' }, 'arrive')
+        .to(O, { y: VH * 0.2, duration: 4.8, ease: 'sine.inOut' }, 'arrive')
+        .to(O, { len: VW * (mobile ? 0.5 : 0.26), duration: 4.8, ease: 'power2.inOut' }, 'arrive')
+        .to(O, { elev: -8, duration: 4.8, ease: 'sine.inOut' }, 'arrive')
+        .to(J, { thrust: 0, duration: 3 }, 'arrive+=0.8')
+        // Verwandlung: er legt sich in die Kurve, kippt in die Draufsicht und schrumpft zum Cursor
+        .to(O, { keyframes: [{ roll: -22, duration: 0.7, ease: 'sine.out' }, { roll: 0, duration: 0.8, ease: 'sine.inOut' }] }, 'bank')
+        .call(() => attach(1.6), null, 'bank+=0.2')
+        .to({}, { duration: 1.7 }, 'bank+=0.2');
+    },
+    /* Ohne Intro (z. B. Seite mitten im Scroll neu geladen): direkt als Cursor aus dem Hyperraum */
+    fly() {
+      if (reduce) return;
+      snapCursor();
+      Object.assign(O, { x: R.x, y: R.y, len: R.len, yaw: 0, elev: CUR_ELEV, roll: 0 });
+      mode = 'cursor'; J.visible = 1; cursorShip(true);
+      gsap.fromTo(J, { stretch: 0.8 }, { stretch: 0, duration: 0.7, ease: 'expo.out' });
+      gsap.fromTo(J, { flash: 0.6 }, { flash: 0, duration: 0.6, ease: 'power2.out' });
+      if (wantJump) startJump();
+    },
+    /* Finale: Zielvisier zurück, Kreuzer fliegt über den Button und springt in den Hyperraum */
+    jump(onJump) {
+      wantJump = true; onJumpCb = onJump;
+      if (mode === 'cursor' || mode === 'attach') startJump();
+      else if (mode === 'hidden' && onJump) onJump();
+    },
+    /* zurückscrollen: er kommt aus dem Hyperraum und wird wieder zum Cursor */
+    unjump() {
+      wantJump = false;
+      if (jumpTl && mode === 'jump') jumpTl.timeScale(1.4).reverse();
+    },
+    get mode() { return mode; },
+  };
+  window.CRUISER = api;
+  window.dispatchEvent(new CustomEvent('cruiser-ready', { detail: api }));
+}
+
+try { boot(); }
+catch (err) {
+  console.warn('Kreuzer konnte nicht gestartet werden:', err);
+  window.CRUISER = null;
+  window.dispatchEvent(new CustomEvent('cruiser-ready', { detail: null }));
+}
+
+</script>
+</body>
+</html>
